@@ -1,0 +1,15 @@
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border:5px solid #efefef;
+  border-radius: 10px;
+  width: 720px;
+  margin-top: 10px;
+}
+
+.edit-card{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,28 +1,16 @@
 {
-	"miniprogramRoot": "miniprogram/",
-	"cloudfunctionRoot": "cloudfunctions/",
-	"setting": {
-		"urlCheck": false,
-		"es6": true,
-		"enhance": true,
-		"postcss": true,
-		"minified": true,
-		"newFeature": true,
-		"coverView": true,
-		"nodeModules": true,
-		"autoAudits": false,
-		"checkInvalidKey": true,
-		"checkSiteMap": true,
-		"uploadWithSourceMap": true,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		}
-	},
+	"miniprogramRoot": "client/dist/",
+	"cloudfunctionRoot": "cloud/functions/",
+	"projectname": "uSkills",
+	"description": "帮助人练习技能",
 	"appid": "wxda141648ee82e1e8",
-	"projectname": "uVedio",
-	"libVersion": "2.9.4",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false
+	},
+	"compileType": "miniprogram",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {
@@ -46,18 +34,34 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": -1,
 			"list": [
 				{
-					"id": -1,
-					"name": "db guide",
-					"pathName": "pages/databaseGuide/databaseGuide",
-					"query": ""
+					"id": 0,
+					"name": "index",
+					"pathName": "pages/types/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "skills",
+					"pathName": "pages/skills/index",
+					"query": "typeid=b040a67a5e06c36507f130b95759c042",
+					"scene": null
+				},
+				{
+					"id": 2,
+					"name": "skillForm",
+					"pathName": "pages/skillForm/index",
+					"query": "typeid=b040a67a5e06c36507f130b95759c042",
+					"scene": null
 				},
 				{
 					"id": -1,
-					"name": "add",
-					"pathName": "pages/add/index",
+					"name": "practise",
+					"pathName": "pages/practise/index",
+					"query": "typeid=b040a67a5e06c36507f130b95759c042",
 					"scene": null
 				}
 			]

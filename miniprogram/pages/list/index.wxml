@@ -1,3 +1,0 @@
-<view class="container">
-    <button bind:tap="onAdd" class="add-btn bg-purple ">添加</button>
-</view>
