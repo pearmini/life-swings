@@ -1,0 +1,9 @@
+.card{
+    width: 700rpx;
+    border-radius: 20rpx;
+}
+
+.add-btn{
+    position: fixed;
+    bottom: 30rpx;
+}
