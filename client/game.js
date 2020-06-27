@@ -10,4 +10,7 @@ window.THREE = THREE;
 canvas.height = window.innerHeight * 2;
 canvas.width = window.innerWidth * 2;
 
+// 防止出现问题
+GameGlobal.ImageBitmap = () => {};
+
 new Main();
