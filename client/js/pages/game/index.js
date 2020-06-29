@@ -123,6 +123,7 @@ class GamePage {
       level: this.databus.level,
     });
     this.gameInfo.reset();
+    this.pendulum.reset();
     this.scene.reset([...this.databus.blocks, ...this.databus.bobs]);
   }
 

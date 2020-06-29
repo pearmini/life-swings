@@ -27,7 +27,7 @@ class Canvas extends Sprite {
     );
     this.instance = new THREE.Mesh(geometry, material);
     this.instance.visible = false;
-    this.instance.position.z = 60;
+    this.instance.position.z = 70;
   }
 
   render(cb, data) {

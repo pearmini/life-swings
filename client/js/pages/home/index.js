@@ -12,8 +12,8 @@ class HomePage extends Page {
     super(scene);
     this.title = new Rect("images/title.png");
     this.startButton = new Rect("images/play.png", startGame);
-    this.classicButton = new Rect("images/classic_title.png", showGridPage);
-    this.levelButton = new Rect("images/level_title.png", showLevelPage);
+    this.classicButton = new Rect("icons/classic.png", showGridPage);
+    this.levelButton = new Rect("icons/level.png", showLevelPage);
     this.loading = new Rect("images/loading.png");
     this.buttons = [this.startButton, this.classicButton, this.levelButton];
     this.isLoading = isLoading;
@@ -26,9 +26,18 @@ class HomePage extends Page {
   }
 
   render = (context, width, height, update) => {
-    context.fillStyle = "rgba(0,0,0,0.3)";
+    context.fillStyle = "rgba(0,0,0,0.2)";
     context.fillRect(0, 0, width, height);
-    this.title.set((width - 200) / 2, 150, 200, 55);
+    context.fillStyle = "rgba(0,0,0,0.3)";
+    context.fillRect(0, height * 0.8, width, height * 0.2);
+    const titleWidth = width * 0.65,
+      titleHeight = titleWidth / 4;
+    this.title.set(
+      (width - titleWidth) / 2,
+      height * 0.25,
+      titleWidth,
+      titleHeight
+    );
     this.title.drawToCanvas(context, update);
     if (this.isLoading) {
       this.loading.set(
@@ -39,30 +48,31 @@ class HomePage extends Page {
       );
       this.loading.drawToCanvas(context, update);
     } else {
-      const imgSrc =
-        this.userInfo.scores.length === 0
-          ? "images/play.png"
-          : "images/continue.png";
+      const startButtonWidth = width * 0.5,
+        startButtonHeight = (startButtonWidth * 3) / 10;
+
       this.startButton.set(
-        (width - 200) / 2,
-        (window.innerHeight - 190) / 2 + 200,
-        200,
-        50,
-        imgSrc
+        (width - startButtonWidth) / 2,
+        height * 0.8 - 100,
+        startButtonWidth,
+        startButtonHeight
       );
       this.startButton.drawToCanvas(context, update);
+
+      const iconSize = height * 0.2 * 0.6;
+      const iconY = height * 0.8 + (height * 0.2 - iconSize) / 2;
       this.classicButton.set(
-        (width - 200) / 2,
-        (window.innerHeight - 70) / 2 + 200,
-        200,
-        50
+        (width - iconSize) / 2 + width * 0.15,
+        iconY,
+        iconSize,
+        iconSize
       );
       this.classicButton.drawToCanvas(context, update);
       this.levelButton.set(
-        (width - 200) / 2,
-        (window.innerHeight + 50) / 2 + 200,
-        200,
-        50
+        (width - iconSize) / 2 - width * 0.15,
+        iconY,
+        iconSize,
+        iconSize
       );
       this.levelButton.drawToCanvas(context, update);
     }

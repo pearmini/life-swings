@@ -113,7 +113,7 @@ class GameController {
           );
           this.gameModel.setStage("game", {
             cells: data,
-            level,
+            level: level + 1,
           });
         }
       },

@@ -64,15 +64,19 @@ class LevelPage extends Page {
         cardPadding * 1.5,
         cardPadding * 1.5
       );
-      const playButton = new Rect("icons/play.png", () =>
-        this.startGame(d.index)
-      );
 
       this.renderGrids(d.data, cardHeight);
 
+      const playButton = new Rect("icons/play.png", () =>
+        this.startGame(d.index)
+      );
+      const tx = translateX;
+      const ty = translateY;
+      this.context.save();
+      this.context.translate(-tx, -ty - cardHeight * i);
       playButton.set(
-        translateX + cardInnerWidth - 120,
-        translateY + i * cardHeight + (cardHeight - 50) / 2,
+        tx + cardInnerWidth - 120,
+        ty + i * cardHeight + (cardHeight - 50) / 2,
         50,
         50
       );
@@ -95,8 +99,8 @@ class LevelPage extends Page {
             this.startGrid(d.index)
           );
           elButton.set(
-            translateX + cardInnerWidth - 60,
-            translateY + i * cardHeight + (cardHeight - 50) / 2,
+            tx + cardInnerWidth - 60,
+            ty + i * cardHeight + (cardHeight - 50) / 2,
             50,
             50
           );
@@ -112,6 +116,8 @@ class LevelPage extends Page {
           );
         }
       }
+      this.context.restore();
+
       this.playButtons.push(playButton);
       this.context.restore();
     }

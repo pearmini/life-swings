@@ -6,7 +6,7 @@ class GridPage extends Page {
     super(scene);
     this.playButton = new Rect("icons/play.png", this.play);
     this.stopButton = new Rect("icons/stop.png", this.stop);
-    this.homeButton = new Rect("icons/home.png", gotoHome);
+    this.homeButton = new Rect("icons/home.png", this.backHome);
     this.clearButton = new Rect("icons/clear.png", this.clear);
     this.downloadButton = new Rect("icons/download.png", this.download);
     this.rightButton = new Rect("icons/right.png", this.goNext);
@@ -20,13 +20,20 @@ class GridPage extends Page {
     ];
     this.isPlaying = false;
     this.nextLevel = nextLevel;
+    this.gotoHome = gotoHome;
   }
 
+  backHome = () => {
+    this.stop();
+    this.gotoHome();
+  };
   goNext = () => {
+    this.stop();
     this.nextLevel(this.level);
   };
 
   clear = () => {
+    this.stop();
     this.grids = this.formGrids(this.row, this.col, this.cells);
     this.renderGrids();
   };
@@ -138,8 +145,8 @@ class GridPage extends Page {
     const { cells = [[]], canEdit = true, level } = data || {};
     this.level = level;
     this.cells = cells;
-    this.row = 10;
-    this.col = 10;
+    this.row = 15;
+    this.col = 15;
     this.grids = this.formGrids(this.row, this.col, cells);
     this.context = context;
     this.width = width;
@@ -187,13 +194,15 @@ class GridPage extends Page {
           .reduce((total, cur) => total + cur);
         let next;
 
-        if (current && sum < 2) {
+        const low = 2,
+          high = 3;
+        if (current && sum < low) {
           next = 0;
-        } else if (current && (sum === 2 || sum === 3)) {
+        } else if (current && (sum === low || sum === high)) {
           next = 1;
-        } else if (current && sum > 3) {
+        } else if (current && sum > high) {
           next = 0;
-        } else if (!current && sum === 3) {
+        } else if (!current && sum === high) {
           next = 1;
         } else {
           next = 0;
