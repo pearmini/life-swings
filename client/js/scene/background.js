@@ -1,5 +1,5 @@
-import Sprite from "../../../utils/sprite";
-import { sceneConfig, globalConfig } from "../../../../config";
+import Sprite from "../utils/sprite";
+import { sceneConfig, globalConfig } from "../../config";
 const { frustumSize } = sceneConfig;
 const { aspect } = globalConfig;
 

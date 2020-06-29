@@ -1,38 +1,32 @@
-import Background from "./runtime/background";
 import Ground from "./runtime/ground";
 import GameInfo from "./runtime/gameinfo";
-import Scene from "../../scene/index";
 import Cylinder from "./block/cylinder";
 import Pendulum from "./Pendulum/index";
 import databus from "./databus";
 import { blockConfig } from "../../../config";
 
 class GamePage {
-  constructor() {
+  constructor({ scene, showGameOverPage, showGridPage, updateScore }) {
     this.aniId = 0;
     this.databus = databus;
-    this.scene = new Scene();
-    this.background = new Background(this.scene.camera.instance);
+    this.scene = scene;
     this.gameInfo = new GameInfo(this.scene.camera.instance);
     this.ground = new Ground(this.scene.instance);
     this.pendulum = new Pendulum(this.scene.instance);
-    this.restart();
+    this.showGameOverPage = showGameOverPage;
+    this.showGridPage = showGridPage;
+    this.updateScore = updateScore;
   }
 
-  restart(cells) {
+  restart(data) {
     // 清除状态
     this.ground.reset();
     this.scene.reset([...this.databus.blocks, ...this.databus.bobs]);
     this.pendulum.reset();
-    this.databus.reset(cells);
-    this.gameInfo.reset();
-    canvas.removeEventListener("touchstart", this.handleTouchStart);
+    this.databus.reset(data);
 
     // 初始化场景
     this.moveToNextBlock();
-
-    // 监听事件
-    canvas.addEventListener("touchstart", this.handleTouchStart);
 
     // 清除上一局的动画
     cancelAnimationFrame(this.aniId);
@@ -85,7 +79,7 @@ class GamePage {
 
   moveToNextBlock() {
     if (this.databus.nextIndex === this.databus.data.length) {
-      this.gameOver();
+      this.gameOver(true);
       return;
     }
     const d = this.databus.data[this.databus.nextIndex];
@@ -102,15 +96,34 @@ class GamePage {
       targetLocation.z
     );
     this.databus.blocks.push(this.databus.currentBlock);
+    this.databus.score = this.databus.nextIndex / this.databus.data.length;
     this.databus.nextIndex++;
     this.pendulum.updateLocation(targetLocation);
     this.scene.updateLocation(targetLocation);
     this.ground.updateLocation(targetLocation);
+    if (this.databus.level !== -1) {
+      this.gameInfo.updateScore(this.databus.score);
+    }
   }
 
-  gameOver() {
+  gameOver(success) {
     this.databus.gameOver = true;
-    this.gameInfo.renderGameOver(this.restart.bind(this));
+    if (success) {
+      this.databus.score = 1;
+      this.showGridPage({
+        cells: this.databus.cells,
+        canEdit: false,
+        level: this.databus.level,
+      });
+    } else {
+      this.showGameOverPage({ level: this.databus.level });
+    }
+    this.updateScore({
+      score: this.databus.score,
+      level: this.databus.level,
+    });
+    this.gameInfo.reset();
+    this.scene.reset([...this.databus.blocks, ...this.databus.bobs]);
   }
 
   loop = () => {
@@ -139,8 +152,6 @@ class GamePage {
   render() {
     this.databus.blocks.forEach((d) => d.render());
     this.databus.bobs.forEach((d) => d.render());
-    this.gameInfo.renderGameScore(this.databus.score);
-    this.background.render();
     this.ground.render();
     this.pendulum.render();
     this.scene.render();

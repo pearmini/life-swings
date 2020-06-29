@@ -1,5 +1,7 @@
 import Camera from "./camera";
 import Light from "./light";
+import Canvas from "./canvas";
+import Background from "./background";
 
 class Scene {
   constructor() {
@@ -16,6 +18,8 @@ class Scene {
     this.instance = new THREE.Scene();
     this.camera = new Camera(this.instance);
     this.light = new Light(this.instance);
+    this.canvas = new Canvas(this.camera.instance);
+    this.background = new Background(this.camera.instance);
 
     // 添加辅助轴线
     const axesHelper = new THREE.AxesHelper(100);
@@ -30,6 +34,7 @@ class Scene {
   render() {
     this.camera.render();
     this.light.render();
+    this.background.render();
     this.renderer.render(this.instance, this.camera.instance);
   }
 

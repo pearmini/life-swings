@@ -3,21 +3,31 @@ class DataBus {
     this.reset();
   }
 
-  reset(cells) {
+  reset(data) {
+    const { level, cells } = this.getInfo(data);
     this.score = 0;
     this.blocks = [];
     this.bobs = [];
     this.nextIndex = 0;
-    this.defaultCells = [
-      [1, 1, 1],
-      [0, 0, 1],
-      [0, 0, 1],
-    ];
-    this.data = this.traverse(cells || this.defaultCells);
+    this.cells = cells;
+    this.data = this.traverse(this.cells);
     this.nextIndex = 0;
     this.currentBlock = null;
     this.currentBob = null;
     this.gameOver = false;
+    this.level = level;
+  }
+
+  getInfo(data) {
+    if (!data) {
+      return {
+        cells: [[1]],
+        level: -1,
+      };
+    }
+    return {
+      ...data,
+    };
   }
 
   traverse(cells) {
@@ -27,8 +37,8 @@ class DataBus {
       .flatMap((row, i) =>
         row.map((d, j) => ({
           value: d,
-          y: cells.length - j - 1,
-          x: row.length - i - 1,
+          y: row.length - j - 1,
+          x: cells.length - i - 1,
         }))
       )
       .filter((d) => d.value)
