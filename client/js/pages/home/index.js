@@ -14,9 +14,9 @@ class HomePage extends Page {
     this.startButton = new Rect("images/play.png", startGame);
     this.classicButton = new Rect("icons/classic.png", showGridPage);
     this.levelButton = new Rect("icons/level.png", showLevelPage);
-    this.loading = new Rect("images/loading.png");
     this.buttons = [this.startButton, this.classicButton, this.levelButton];
     this.isLoading = isLoading;
+    this.loadingTimer = null;
   }
 
   setData(userInfo, level) {
@@ -25,11 +25,29 @@ class HomePage extends Page {
     this.level = level;
   }
 
+  renderLoading = (context, width, height, update) => {
+    const start = Date.now();
+    const radius = 20;
+    this.loadingTimer = setInterval(() => {
+      const current = Date.now() - start;
+      const degree = current % 360;
+      context.clearRect(0, 0, width, height);
+      context.fillStyle = "rgba(0,0,0,0.2)";
+      context.fillRect(0, 0, width, height);
+      context.strokeStyle = "white";
+      context.lineWidth = 3;
+      context.beginPath();
+      context.arc(width / 2, height / 2, radius, (degree - 180) * (Math.PI / 180), degree * (Math.PI / 180));
+      context.stroke();
+      this.title.drawToCanvas(context, update);
+      update();
+    }, 10);
+  };
+
   render = (context, width, height, update) => {
     context.fillStyle = "rgba(0,0,0,0.2)";
     context.fillRect(0, 0, width, height);
-    context.fillStyle = "rgba(0,0,0,0.3)";
-    context.fillRect(0, height * 0.8, width, height * 0.2);
+
     const titleWidth = width * 0.65,
       titleHeight = titleWidth / 4;
     this.title.set(
@@ -40,14 +58,13 @@ class HomePage extends Page {
     );
     this.title.drawToCanvas(context, update);
     if (this.isLoading) {
-      this.loading.set(
-        (width - 200) / 2,
-        (window.innerHeight - 190) / 2 + 200,
-        200,
-        50
-      );
-      this.loading.drawToCanvas(context, update);
+      this.renderLoading(context, width, height, update);
     } else {
+      if (this.loadingTimer) {
+        clearInterval(this.loadingTimer);
+      }
+      context.fillStyle = "rgba(0,0,0,0.3)";
+      context.fillRect(0, height * 0.8, width, height * 0.2);
       const startButtonWidth = width * 0.5,
         startButtonHeight = (startButtonWidth * 3) / 10;
 
@@ -59,7 +76,7 @@ class HomePage extends Page {
       );
       this.startButton.drawToCanvas(context, update);
 
-      const iconSize = height * 0.2 * 0.6;
+      const iconSize = height * 0.2 * 0.5;
       const iconY = height * 0.8 + (height * 0.2 - iconSize) / 2;
       this.classicButton.set(
         (width - iconSize) / 2 + width * 0.15,

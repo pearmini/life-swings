@@ -4,9 +4,10 @@ import Page from "../../utils/page";
 class LevelPage extends Page {
   constructor({ scene, gotoHome, startGame, startGrid }) {
     super(scene);
-    this.homeButton = new Rect("icons/home.png", gotoHome);
-    this.rightButton = new Rect("icons/right.png", this.nextPage);
-    this.leftButton = new Rect("icons/left.png", this.prePage);
+    this.homeButton = new Rect("icons/home-fill.png", gotoHome);
+    this.rightButton = new Rect("icons/right-fill.png", this.nextPage);
+    this.leftButton = new Rect("icons/left-fill.png", this.prePage);
+    this.title = new Rect("images/level_title.png");
     this.buttons = [this.homeButton, this.rightButton, this.leftButton];
     this.playButtons = [];
     this.page = 0;
@@ -35,21 +36,22 @@ class LevelPage extends Page {
       this.page * this.limit,
       (this.page + 1) * this.limit
     );
-    const cardHeight = 150,
+    const cardHeight = (this.height * 0.6) / Math.max(3, this.limit),
       cardWidth = this.width * 0.8,
-      cardPadding = 10,
+      cardPadding = 20,
       cardInnerWidth = cardWidth - cardPadding * 2,
       cardInnerHeight = cardHeight - cardPadding * 2,
       translateX = (this.width - cardWidth) / 2,
       translateY = (this.height - cardHeight * this.limit) / 2;
 
+    this.cardPadding = cardPadding;
+    this.cardInnerHeight = cardInnerWidth;
     this.context.save();
     this.context.translate(translateX, translateY);
-    this.context.fillStyle = "white";
+    this.context.fillStyle = "#3d3b3f";
     this.context.fillRect(0, 0, cardWidth, cardHeight * levels.length);
-    this.context.fillStyle = "black";
     this.context.font = "bold 20px '字体','字体','微软雅黑','宋体'";
-    this.context.textBaseline = "top";
+    this.context.textBaseline = "middle";
     for (let i = 0; i < levels.length; i++) {
       this.context.save();
       this.context.translate(0, cardHeight * i);
@@ -59,38 +61,40 @@ class LevelPage extends Page {
       );
       const score = this.userInfo.scores.find((s) => s.level === d.index);
       const canPlay = d.index === 0 ? true : preScore !== undefined;
+      this.context.fillStyle = "#b1b2b3";
       this.context.fillText(
-        `第${d.index + 1}关`,
+        `${d.index + 1}`,
         cardPadding * 1.5,
-        cardPadding * 1.5
+        cardHeight / 2
       );
 
-      this.renderGrids(d.data, cardHeight);
+      this.renderGrids(this.wrapper(d.data), cardHeight);
 
       const playButton = new Rect("icons/play.png", () =>
         this.startGame(d.index)
       );
       const tx = translateX;
       const ty = translateY;
+      const iconSize = 35;
       this.context.save();
       this.context.translate(-tx, -ty - cardHeight * i);
       playButton.set(
-        tx + cardInnerWidth - 120,
-        ty + i * cardHeight + (cardHeight - 50) / 2,
-        50,
-        50
+        tx + cardInnerWidth - 100,
+        ty + i * cardHeight + (cardHeight - iconSize) / 2,
+        iconSize,
+        iconSize
       );
 
       playButton.drawToCanvas(this.context, this.update);
 
       if (!canPlay) {
         playButton.visible = false;
-        this.context.fillStyle = "rgba(0, 0, 0, 0.5)";
-        this.context.fillRect(
-          cardPadding,
-          cardPadding,
-          cardInnerWidth,
-          cardInnerHeight
+        this.context.font = "bold 20px '字体','字体','微软雅黑','宋体'";
+        this.context.fillStyle = "white";
+        this.context.fillText(
+          0 + "%",
+          tx + cardInnerWidth - 40,
+          ty + i * cardHeight + cardHeight / 2
         );
       } else {
         playButton.visible = true;
@@ -99,24 +103,35 @@ class LevelPage extends Page {
             this.startGrid(d.index)
           );
           elButton.set(
-            tx + cardInnerWidth - 60,
-            ty + i * cardHeight + (cardHeight - 50) / 2,
-            50,
-            50
+            tx + cardInnerWidth - 40,
+            ty + i * cardHeight + (cardHeight - iconSize) / 2,
+            iconSize,
+            iconSize
           );
           elButton.drawToCanvas(this.context, this.update);
           this.playButtons.push(elButton);
         } else {
           this.context.font = "bold 20px '字体','字体','微软雅黑','宋体'";
           const value = score ? Math.floor(score.value * 100) : 0;
+          this.context.fillStyle = "white";
           this.context.fillText(
             value + "%",
-            cardInnerWidth - 60 + 10,
-            (cardHeight - 50) / 2 + 15
+            tx + cardInnerWidth - 40,
+            ty + i * cardHeight + cardHeight / 2
           );
         }
       }
       this.context.restore();
+
+      if (!canPlay) {
+        this.context.fillStyle = "rgba(0, 0, 0, 0.6)";
+        this.context.fillRect(
+          cardPadding,
+          cardPadding,
+          cardInnerWidth,
+          cardInnerHeight
+        );
+      }
 
       this.playButtons.push(playButton);
       this.context.restore();
@@ -124,18 +139,33 @@ class LevelPage extends Page {
     this.context.restore();
   };
 
+  wrapper = (data) => {
+    const col = data.length ? data[0].length : 0;
+    const newData = [];
+    const row = [];
+    for (let i = 0; i < col + 2; i++) {
+      row.push(0);
+    }
+    newData.push(row);
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
+      newData.push([0, ...row, 0]);
+    }
+    newData.push([...row]);
+    return newData;
+  };
+
   renderGrids = (data, height) => {
-    const matrixSize = 100;
-    const row = data.length,
-      col = data.length ? data[0].length : 0;
-    const maxCellSize = 20;
+    const matrixSize = this.cardInnerHeight * 0.5;
+    const row = data.length;
+    const maxCellSize = 15;
     const cellSize =
       Math.min(maxCellSize, matrixSize / row, matrixSize / row) | 0;
-    const translateX = (200 - col * cellSize) / 2,
+    const translateX = this.cardPadding + this.width * 0.12,
       translateY = (height - row * cellSize) / 2;
     this.context.save();
     this.context.translate(translateX, translateY);
-    this.context.strokeStyle = "black";
+    this.context.strokeStyle = "#aaa";
     this.context.lineWidth = 1;
     this.context.fillStyle = "black";
     for (let i = 0; i < data.length; i++) {
@@ -143,22 +173,45 @@ class LevelPage extends Page {
       for (let j = 0; j < row.length; j++) {
         const x = j * cellSize;
         const y = i * cellSize;
-        if (row[j]) {
-          this.context.fillRect(x, y, cellSize, cellSize);
-        }
         this.context.strokeRect(x, y, cellSize, cellSize);
+        if (row[j]) {
+          this.context.fillStyle = "black";
+        } else {
+          this.context.fillStyle = "white";
+        }
+        this.context.fillRect(x, y, cellSize, cellSize);
       }
     }
     this.context.restore();
   };
 
   renderPage = () => {
+    const iconSize = this.width * 0.1;
+    const iconY = this.height * 0.8 + iconSize / 2;
+    const titleWidth = this.width * 0.12,
+      titleHeight = (titleWidth * 87) / 173;
     this.context.clearRect(0, 0, this.width, this.height);
     this.context.fillStyle = "rgba(0,0,0,0.3)";
     this.context.fillRect(0, 0, this.width, this.height);
-    this.homeButton.set(30, 30, 50, 50);
-    this.leftButton.set(this.width - 150, this.height - 100, 50, 50);
-    this.rightButton.set(this.width - 100, this.height - 100, 50, 50);
+    this.title.set(
+      (this.width - titleWidth) / 2,
+      this.height * 0.2 - titleHeight - iconSize / 2,
+      titleWidth,
+      titleHeight
+    );
+    this.homeButton.set(this.width * 0.1, iconY, iconSize, iconSize);
+    this.rightButton.set(
+      this.width * 0.9 - iconSize,
+      iconY,
+      iconSize,
+      iconSize
+    );
+    this.leftButton.set(
+      this.width * 0.9 - iconSize * 2 - 10,
+      iconY,
+      iconSize,
+      iconSize
+    );
     this.renderLevels();
     if (this.page < this.pageCount - 1) {
       this.rightButton.visible = true;
@@ -172,6 +225,7 @@ class LevelPage extends Page {
     } else {
       this.leftButton.visible = false;
     }
+    this.title.drawToCanvas(this.context, this.update);
     this.homeButton.drawToCanvas(this.context, this.update);
   };
 
