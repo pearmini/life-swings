@@ -116,7 +116,13 @@ class GamePage {
         level: this.databus.level,
       });
     } else {
-      this.showGameOverPage({ level: this.databus.level });
+      this.showGameOverPage({
+        level: this.databus.level,
+        score: this.databus.score,
+        cells: this.databus.cells,
+        nextIndex: this.databus.nextIndex,
+        grids: this.databus.data,
+      });
     }
     this.updateScore({
       score: this.databus.score,
