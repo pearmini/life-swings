@@ -5,7 +5,7 @@ export default function (obj, from, to, duration, delay = 0, type = "Linear") {
     setTimeout(
       ((prop) => {
         return () => {
-          TweenAnimation(from[prop], to[prop], duration, type, (value) => {
+          tweenAnimation(from[prop], to[prop], duration, type, (value) => {
             obj[prop] = value;
           });
         };
@@ -15,7 +15,7 @@ export default function (obj, from, to, duration, delay = 0, type = "Linear") {
   }
 }
 
-function TweenAnimation(from, to, duration, type, cb) {
+export function tweenAnimation(from, to, duration, type, cb) {
   let aniId = 0;
   let lastTime = Date.now();
   const totalDuration = duration * 1000;

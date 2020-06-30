@@ -22,8 +22,8 @@ class Scene {
     this.background = new Background(this.camera.instance);
 
     // 添加辅助轴线
-    const axesHelper = new THREE.AxesHelper(100);
-    this.instance.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper(100);
+    // this.instance.add(axesHelper);
   }
 
   updateLocation(location) {

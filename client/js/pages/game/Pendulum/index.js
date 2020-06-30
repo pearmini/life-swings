@@ -17,10 +17,21 @@ class Pendulum extends Sprite {
     this.aAcceleration = 0;
     this.rotateAxis = new THREE.Vector3(-1, 0, 1).normalize();
     this.instance.rotateOnAxis(this.rotateAxis, this.angle);
+    this.gravity = 0.005;
+    this.needsUpdateGravity = false;
   }
 
   reset() {
     this.location.set(0, locationY, 0);
+  }
+
+  updateBobColor(color) {
+    this.color = color;
+    this.bob.updateColor(color);
+  }
+
+  updateAcceleration() {
+    this.needsUpdateGravity = true;
   }
 
   release(scene) {
@@ -31,7 +42,7 @@ class Pendulum extends Sprite {
     const x = len * Math.sin(this.angle) * Math.sin(theta) + this.location.x;
     const z = len * Math.sin(this.angle) * Math.cos(theta) + this.location.z;
     const speed = len * this.aVelocity;
-    const bob = new Bob(scene, x, y, z);
+    const bob = new Bob(scene, x, y, z, this.color);
     const initialVelocity = isVertical
       ? new THREE.Vector3(0, 0, 0)
       : new THREE.Vector3(speed * Math.cos(theta), 0, speed * Math.sin(theta));
@@ -57,8 +68,14 @@ class Pendulum extends Sprite {
   }
 
   update() {
-    const gravity = 0.005;
-    this.aAcceleration = -1 * gravity * Math.sin(this.angle);
+    const threshold = 0.01;
+    if (this.needsUpdateGravity && this.aVelocity < threshold) {
+      const max = 0.011;
+      const min = 0.004;
+      this.gravity = min + Math.random() * (max - min);
+      this.needsUpdateGravity = false;
+    }
+    this.aAcceleration = -1 * this.gravity * Math.sin(this.angle);
     this.aVelocity += this.aAcceleration;
     this.angle += this.aVelocity;
   }

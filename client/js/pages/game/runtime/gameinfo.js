@@ -3,7 +3,7 @@ import Text from "../view3d/text";
 class GameInfo {
   constructor(scene) {
     this.scene = scene;
-    this.score = new Text(this.scene, -20, 40, "0");
+    this.score = new Text(this.scene, -20, 40, "0", 0xffffff);
   }
 
   updateScore(score) {

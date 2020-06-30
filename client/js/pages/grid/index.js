@@ -145,8 +145,8 @@ class GridPage extends Page {
     const { cells = [[]], canEdit = true, level } = data || {};
     this.level = level;
     this.cells = cells;
-    this.row = 15;
-    this.col = 15;
+    this.row = 50;
+    this.col = 50;
     this.grids = this.formGrids(this.row, this.col, cells);
     this.context = context;
     this.width = width;
