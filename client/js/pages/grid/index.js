@@ -5,28 +5,51 @@ class GridPage extends Page {
   constructor({ scene, gotoHome, nextLevel }) {
     super(scene);
     this.playButton = new Rect("icons/play.png", this.play);
+    this.ffButton = new Rect("icons/ff.png", this.ff);
     this.stopButton = new Rect("icons/stop.png", this.stop);
-    this.homeButton = new Rect("icons/home.png", this.backHome);
+    this.homeButton = new Rect("icons/home-fill-black.png", this.backHome);
     this.clearButton = new Rect("icons/clear.png", this.clear);
-    this.downloadButton = new Rect("icons/download.png", this.download);
-    this.rightButton = new Rect("icons/right.png", this.goNext);
+    this.rightButton = new Rect("icons/right-fill-black.png", this.goNext);
     this.buttons = [
       this.playButton,
       this.homeButton,
-      this.stopButton,
       this.clearButton,
-      this.downloadButton,
       this.rightButton,
+      this.ffButton,
+      this.stopButton,
     ];
     this.isPlaying = false;
+    this.isFast = false;
     this.nextLevel = nextLevel;
     this.gotoHome = gotoHome;
+    this.speed = 1000;
+    this.playButton.visible = true;
+    this.stopButton.visible = false;
+    this.ffButton.visible = false;
   }
 
   backHome = () => {
     this.stop();
     this.gotoHome();
   };
+
+  ff = () => {
+    this.playButton.visible = false;
+    this.stopButton.visible = true;
+    this.ffButton.visible = false;
+    this.isFast = true;
+    this.speed = 500;
+    this.isPlaying = true;
+    clearInterval(this.timer);
+    this.timer = setInterval(() => {
+      const state = this.evolution();
+      this.renderGrids();
+      if (state) {
+        this.stop();
+      }
+    }, this.speed);
+  };
+
   goNext = () => {
     this.stop();
     this.nextLevel(this.level);
@@ -38,28 +61,13 @@ class GridPage extends Page {
     this.renderGrids();
   };
 
-  download = () => {
-    this.stop();
-    this.canvas.toTempFilePath({
-      x: this.translateX * 2,
-      y: this.translateY * 2,
-      width: this.matrixWidth * 2,
-      height: this.matrixHeight * 2,
-      destWidth: this.matrixWidth * 2,
-      destHeight: this.matrixHeight * 2,
-      success: (res) => {
-        wx.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
-          fail: console.error,
-        });
-      },
-    });
-  };
-
   play = () => {
-    this.isPlaying = true;
-    this.stopButton.visible = true;
+    console.log("play");
     this.playButton.visible = false;
+    this.stopButton.visible = false;
+    this.ffButton.visible = true;
+    this.isPlaying = true;
+    this.isFast = false;
     this.renderGrids();
     this.timer = setInterval(() => {
       const state = this.evolution();
@@ -67,25 +75,29 @@ class GridPage extends Page {
       if (state) {
         this.stop();
       }
-    }, 1000);
+    }, this.speed);
   };
 
   stop = () => {
-    this.isPlaying = false;
-    this.stopButton.visible = false;
     this.playButton.visible = true;
+    this.stopButton.visible = false;
+    this.ffButton.visible = false;
+    this.isPlaying = false;
+    this.isFast = false;
+    this.speed = 1000;
     clearInterval(this.timer);
     this.renderGrids();
   };
 
   renderGrids = () => {
+    this.iconSize = 50;
     this.context.fillStyle = "white";
     this.context.fillRect(0, 0, this.width, this.height);
     this.context.save();
     const lineWidth = 1;
     const row = this.grids.length,
       col = this.grids.length ? this.grids[0].length : 0;
-    this.context.strokeStyle = "black";
+    this.context.strokeStyle = "#eeeeee";
     this.context.fillStyle = "black";
     this.context.lineWidth = lineWidth;
     this.matrixWidth = this.cellSize * col;
@@ -106,45 +118,57 @@ class GridPage extends Page {
       }
     }
     this.context.restore();
-    if (this.isPlaying) {
-      this.stopButton.set((this.width - 50) / 2, this.height - 150, 50, 50);
-      this.stopButton.drawToCanvas(this.context, this.update);
-    } else {
-      this.playButton.set((this.width - 50) / 2, this.height - 150, 50, 50);
-      this.playButton.drawToCanvas(this.context, this.update);
-    }
+
+    const selectedButton = this.isFast
+      ? this.stopButton
+      : this.isPlaying
+      ? this.ffButton
+      : this.playButton;
+
+    selectedButton.set(
+      this.width / 2 - 10 - this.iconSize,
+      this.height - 100,
+      this.iconSize,
+      this.iconSize
+    );
+
+    selectedButton.drawToCanvas(this.context, this.update);
 
     if (!this.canEdit) {
       this.rightButton.visible = true;
       this.rightButton.set(
-        (this.width - 50) / 2 + 120,
+        this.width * 0.9 - this.iconSize,
         this.height - 100,
-        50,
-        50
+        this.iconSize,
+        this.iconSize
       );
       this.rightButton.drawToCanvas(this.context, this.update);
     } else {
       this.rightButton.visible = false;
     }
 
-    this.clearButton.set((this.width - 50) / 2 + 60, this.height - 100, 50, 50);
-    this.downloadButton.set(
-      (this.width - 50) / 2 - 60,
+    this.clearButton.set(
+      this.width / 2 + 10,
       this.height - 100,
-      50,
-      50
+      this.iconSize,
+      this.iconSize
     );
-    this.downloadButton.drawToCanvas(this.context, this.update);
-    this.homeButton.set((this.width - 50) / 2 - 120, this.height - 100, 50, 50);
+    this.homeButton.set(
+      this.width * 0.1,
+      this.height - 100,
+      this.iconSize,
+      this.iconSize
+    );
 
     this.clearButton.drawToCanvas(this.context, this.update);
     this.homeButton.drawToCanvas(this.context, this.update);
   };
 
   render = (context, width, height, update, data, canvas) => {
-    const { cells = [[]], canEdit = true, level } = data || {};
+    const { cells = [[]], canEdit = true, level, rule } = data || {};
     this.level = level;
     this.cells = cells;
+    this.rule = rule;
     this.row = 50;
     this.col = 50;
     this.grids = this.formGrids(this.row, this.col, cells);
@@ -174,6 +198,12 @@ class GridPage extends Page {
 
     const newGrids = [];
     let same = true;
+    let survie = new Set([2, 3]),
+      born = new Set([3]);
+    if (this.rule) {
+      survie = new Set(this.rule.survie);
+      born = new Set(this.rule.born);
+    }
     for (let i = 0; i < this.grids.length; i++) {
       const row = this.grids[i];
       const newRow = [];
@@ -193,19 +223,10 @@ class GridPage extends Page {
           .map(([x, y]) => getState(x, y))
           .reduce((total, cur) => total + cur);
         let next;
-
-        const low = 2,
-          high = 3;
-        if (current && sum < low) {
-          next = 0;
-        } else if (current && (sum === low || sum === high)) {
-          next = 1;
-        } else if (current && sum > high) {
-          next = 0;
-        } else if (!current && sum === high) {
-          next = 1;
+        if (current) {
+          next = survie.has(sum) ? 1 : 0;
         } else {
-          next = 0;
+          next = born.has(sum) ? 1 : 0;
         }
         if (next !== current) {
           same = false;
@@ -248,7 +269,6 @@ class GridPage extends Page {
         return;
       }
     }
-
     const inGrid = (i, j) => {
       const startX = j * this.cellSize + this.translateX;
       const endX = startX + this.cellSize;

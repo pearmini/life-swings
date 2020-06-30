@@ -162,6 +162,7 @@ class GamePage {
           cells: this.databus.cells,
           canEdit: false,
           level: this.databus.level,
+          rule: this.databus.rule,
         });
       }, delay);
     } else if (state === F) {
@@ -172,6 +173,7 @@ class GamePage {
           cells: this.databus.cells,
           nextIndex: this.databus.nextIndex,
           grids: this.databus.data,
+          rule: this.databus.data,
         });
       }, delay);
     } else if (state === RR || state === RL) {

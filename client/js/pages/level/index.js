@@ -42,15 +42,16 @@ class LevelPage extends Page {
       cardInnerWidth = cardWidth - cardPadding * 2,
       cardInnerHeight = cardHeight - cardPadding * 2,
       translateX = (this.width - cardWidth) / 2,
-      translateY = (this.height - cardHeight * this.limit) / 2;
+      translateY = (this.height - cardHeight * levels.length) / 2;
 
     this.cardPadding = cardPadding;
-    this.cardInnerHeight = cardInnerWidth;
+    this.cardInnerHeight = cardInnerHeight;
+    this.cardHeight = cardHeight;
     this.context.save();
     this.context.translate(translateX, translateY);
     this.context.fillStyle = "#3d3b3f";
     this.context.fillRect(0, 0, cardWidth, cardHeight * levels.length);
-    this.context.font = "bold 20px '字体','字体','微软雅黑','宋体'";
+    this.context.font = "bold 15px '字体','字体','微软雅黑','宋体'";
     this.context.textBaseline = "middle";
     for (let i = 0; i < levels.length; i++) {
       this.context.save();
@@ -62,10 +63,11 @@ class LevelPage extends Page {
       const score = this.userInfo.scores.find((s) => s.level === d.index);
       const canPlay = d.index === 0 ? true : preScore !== undefined;
       this.context.fillStyle = "#b1b2b3";
+      this.context.textBaseline = "top";
       this.context.fillText(
-        `${d.index + 1}`,
+        `第${d.index + 1}关：${d.name}`,
         cardPadding * 1.5,
-        cardHeight / 2
+        20
       );
 
       this.renderGrids(this.wrapper(d.data), cardHeight);
@@ -80,7 +82,10 @@ class LevelPage extends Page {
       this.context.translate(-tx, -ty - cardHeight * i);
       playButton.set(
         tx + cardInnerWidth - 100,
-        ty + i * cardHeight + (cardHeight - iconSize) / 2,
+        ty +
+          i * cardHeight +
+          (cardHeight - iconSize) / 2 +
+          this.cardPadding / 2,
         iconSize,
         iconSize
       );
@@ -91,10 +96,11 @@ class LevelPage extends Page {
         playButton.visible = false;
         this.context.font = "bold 20px '字体','字体','微软雅黑','宋体'";
         this.context.fillStyle = "white";
+        this.context.textBaseline = "middle";
         this.context.fillText(
           0 + "%",
           tx + cardInnerWidth - 40,
-          ty + i * cardHeight + cardHeight / 2
+          ty + i * cardHeight + cardHeight / 2 + this.cardPadding / 2
         );
       } else {
         playButton.visible = true;
@@ -104,7 +110,10 @@ class LevelPage extends Page {
           );
           elButton.set(
             tx + cardInnerWidth - 40,
-            ty + i * cardHeight + (cardHeight - iconSize) / 2,
+            ty +
+              i * cardHeight +
+              (cardHeight - iconSize) / 2 +
+              this.cardPadding / 2,
             iconSize,
             iconSize
           );
@@ -114,10 +123,11 @@ class LevelPage extends Page {
           this.context.font = "bold 20px '字体','字体','微软雅黑','宋体'";
           const value = score ? Math.floor(score.value * 100) : 0;
           this.context.fillStyle = "white";
+          this.context.textBaseline = "middle";
           this.context.fillText(
             value + "%",
             tx + cardInnerWidth - 40,
-            ty + i * cardHeight + cardHeight / 2
+            ty + i * cardHeight + cardHeight / 2 + this.cardPadding / 2
           );
         }
       }
@@ -125,12 +135,7 @@ class LevelPage extends Page {
 
       if (!canPlay) {
         this.context.fillStyle = "rgba(0, 0, 0, 0.6)";
-        this.context.fillRect(
-          cardPadding,
-          cardPadding,
-          cardInnerWidth,
-          cardInnerHeight
-        );
+        this.context.fillRect(0, 0, cardWidth, cardHeight);
       }
 
       this.playButtons.push(playButton);
@@ -155,14 +160,16 @@ class LevelPage extends Page {
     return newData;
   };
 
-  renderGrids = (data, height) => {
-    const matrixSize = this.cardInnerHeight * 0.5;
+  renderGrids = (data) => {
+    const matrixSize = this.cardInnerHeight * 0.7;
     const row = data.length;
+    const col = data.length ? data[0].length : 0;
     const maxCellSize = 15;
     const cellSize =
-      Math.min(maxCellSize, matrixSize / row, matrixSize / row) | 0;
+      Math.min(maxCellSize, matrixSize / row, matrixSize / col) | 0;
     const translateX = this.cardPadding + this.width * 0.12,
-      translateY = (height - row * cellSize) / 2;
+      translateY =
+        (this.cardHeight - cellSize * row) / 2 + this.cardPadding / 2;
     this.context.save();
     this.context.translate(translateX, translateY);
     this.context.strokeStyle = "#aaa";

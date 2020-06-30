@@ -4,8 +4,9 @@ class DataBus {
   }
 
   reset(data) {
-    const { level, cells } = this.getInfo(data);
+    const { level, cells, rule } = this.getInfo(data);
     this.score = 0;
+    this.rule = rule;
     this.blocks = [];
     this.bobs = [];
     this.nextIndex = 0;
@@ -23,6 +24,7 @@ class DataBus {
       return {
         cells: [[1]],
         level: -1,
+        rule: [],
       };
     }
     return {
