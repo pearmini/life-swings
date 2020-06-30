@@ -22,6 +22,7 @@ class Pendulum extends Sprite {
   }
 
   reset() {
+    this.instance.visible = true;
     this.location.set(0, locationY, 0);
   }
 
@@ -70,8 +71,8 @@ class Pendulum extends Sprite {
   update() {
     const threshold = 0.01;
     if (this.needsUpdateGravity && this.aVelocity < threshold) {
-      const max = 0.011;
-      const min = 0.004;
+      const max = 0.008;
+      const min = 0.003;
       this.gravity = min + Math.random() * (max - min);
       this.needsUpdateGravity = false;
     }

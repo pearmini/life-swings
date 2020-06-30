@@ -37,3 +37,14 @@ export const colorConfig = {
     ["#f79071", "#fa744f", "#16817a", "#024249"],
   ],
 };
+
+export const musicConfig = {
+  sucess: "audios/sucess.mp3",
+  on: "audios/on.mp3",
+  enterGame: "audios/enter-game.mp3",
+  out: "audios/out.mp3",
+  el: "audios/el.mp3",
+  page: "audios/page.mp3",
+  end: "audios/end.mp3",
+  start: "audios/start.mp3",
+};

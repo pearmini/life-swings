@@ -1,6 +1,7 @@
 import Sprite from "../../../utils/sprite";
 import { pendulumConfig, blockConfig } from "../../../../config";
 import animate, { tweenAnimation } from "../../../libs/animate";
+import musicManager from "../../../utils/musicManager";
 
 const { bobSize } = pendulumConfig;
 const { height } = blockConfig;
@@ -62,6 +63,10 @@ class Bob extends Sprite {
       0.4,
       350
     );
+
+    setTimeout(() => {
+      musicManager.out.play();
+    }, 350);
   }
 
   update() {

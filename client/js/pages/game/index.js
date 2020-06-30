@@ -5,6 +5,7 @@ import Pendulum from "./Pendulum/index";
 import ColorManager from "../../utils/colorManager";
 import databus from "./databus";
 import { blockConfig, colorConfig } from "../../../config";
+import musicManager from "../../utils/musicManager";
 
 const S = 0;
 const F = 1;
@@ -79,6 +80,7 @@ class GamePage {
       // 可以落上去
       if (bobY <= blockY + blockHeight) {
         // 已经落上去了
+        musicManager.on.play();
         return "continue";
       } else {
         return "falling";
@@ -89,6 +91,7 @@ class GamePage {
         // 可以直接掉下去
         if (bobY <= 0) {
           // 已经落地
+          musicManager.out.play();
           return "over";
         } else {
           return "fallinig";
@@ -155,8 +158,9 @@ class GamePage {
 
   gameOver(state) {
     this.databus.gameOver = true;
-    const delay = 1500;
+    const delay = 2500;
     if (state === S) {
+      musicManager.sucess.play();
       setTimeout(() => {
         this.showGridPage({
           cells: this.databus.cells,
@@ -165,6 +169,12 @@ class GamePage {
           rule: this.databus.rule,
         });
       }, delay);
+      this.databus.score = 1;
+      this.pendulum.instance.visible = false;
+      this.gameInfo.updateScore(this.databus.score);
+      setTimeout(() => {
+        this.gameInfo.showSuccess();
+      }, 500);
     } else if (state === F) {
       setTimeout(() => {
         this.showGameOverPage({

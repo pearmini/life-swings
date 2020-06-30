@@ -1,5 +1,7 @@
 import Rect from "../../utils/rect";
 import Page from "../../utils/page";
+import musicManger from "../../utils/musicManager";
+import musicManager from "../../utils/musicManager";
 
 class GridPage extends Page {
   constructor({ scene, gotoHome, nextLevel }) {
@@ -62,7 +64,6 @@ class GridPage extends Page {
   };
 
   play = () => {
-    console.log("play");
     this.playButton.visible = false;
     this.stopButton.visible = false;
     this.ffButton.visible = true;
@@ -169,8 +170,8 @@ class GridPage extends Page {
     this.level = level;
     this.cells = cells;
     this.rule = rule;
-    this.row = 50;
-    this.col = 50;
+    this.row = 100;
+    this.col = 100;
     this.grids = this.formGrids(this.row, this.col, cells);
     this.context = context;
     this.width = width;
@@ -183,6 +184,7 @@ class GridPage extends Page {
   };
 
   evolution() {
+    musicManager.el.play();
     const getState = (i, j) => {
       if (
         i >= 0 &&
@@ -198,12 +200,13 @@ class GridPage extends Page {
 
     const newGrids = [];
     let same = true;
-    let survie = new Set([2, 3]),
+    let survive = new Set([2, 3]),
       born = new Set([3]);
     if (this.rule) {
-      survie = new Set(this.rule.survie);
+      survive = new Set(this.rule.survive);
       born = new Set(this.rule.born);
     }
+
     for (let i = 0; i < this.grids.length; i++) {
       const row = this.grids[i];
       const newRow = [];
@@ -224,7 +227,7 @@ class GridPage extends Page {
           .reduce((total, cur) => total + cur);
         let next;
         if (current) {
-          next = survie.has(sum) ? 1 : 0;
+          next = survive.has(sum) ? 1 : 0;
         } else {
           next = born.has(sum) ? 1 : 0;
         }

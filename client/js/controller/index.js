@@ -1,6 +1,7 @@
 import gameView from "./view";
 import gameModel from "./model";
 import Scene from "../scene/index";
+import musicManager from "../utils/musicManager";
 
 class GameController {
   constructor() {
@@ -53,6 +54,7 @@ class GameController {
     const homePageProps = {
       scene,
       startGame: () => {
+        musicManager.start.play();
         const sum = this.gameModel.userInfo.scores.reduce(
           (total, cur) => (total += cur.value),
           0
@@ -90,6 +92,7 @@ class GameController {
     const gameOverPageProps = {
       scene,
       restartGame: (level) => {
+        musicManager.start.play();
         const { data, rule } = this.gameModel.levels.find(
           (d) => d.index === level
         );
@@ -128,6 +131,7 @@ class GameController {
       scene,
       gotoHome: () => this.gameModel.setStage("home"),
       startGame: (level) => {
+        musicManager.start.play();
         const { data, rule } = this.gameModel.levels.find(
           (d) => d.index === level
         );
@@ -143,6 +147,7 @@ class GameController {
           canEdit: false,
           cells: d.data,
           level,
+          rule: d.rule,
         };
         this.gameModel.setStage("grid", data);
       },
@@ -156,6 +161,7 @@ class GameController {
     this.gameView.initLevelPage(levelPageProps);
 
     this.gameModel.setStage(initialStage);
+    musicManager.enterGame.play();
 
     // 设置事件监听
     canvas.addEventListener("touchstart", this.handleTouchStart);

@@ -1,5 +1,6 @@
 import Rect from "../../utils/rect";
 import Page from "../../utils/page";
+import musicManager from "../../utils/musicManager";
 
 class LevelPage extends Page {
   constructor({ scene, gotoHome, startGame, startGrid }) {
@@ -17,6 +18,7 @@ class LevelPage extends Page {
   }
 
   prePage = () => {
+    musicManager.page.play();
     if (this.page > 0) {
       this.page--;
     }
@@ -24,6 +26,7 @@ class LevelPage extends Page {
   };
 
   nextPage = () => {
+    musicManager.page.play();
     if (this.page < this.pageCount) {
       this.page++;
     }
@@ -53,6 +56,8 @@ class LevelPage extends Page {
     this.context.fillRect(0, 0, cardWidth, cardHeight * levels.length);
     this.context.font = "bold 15px '字体','字体','微软雅黑','宋体'";
     this.context.textBaseline = "middle";
+    this.context.textAlign = "left";
+
     for (let i = 0; i < levels.length; i++) {
       this.context.save();
       this.context.translate(0, cardHeight * i);
