@@ -33,18 +33,37 @@ class DataBus {
   }
 
   traverse(cells) {
-    const dist = (d) => d.x * d.x + d.y * d.y;
-    const compare = (a, b) => a.x - b.x || dist(a) - dist(b);
-    return cells
-      .flatMap((row, i) =>
-        row.map((d, j) => ({
-          value: d,
-          y: row.length - j - 1,
-          x: cells.length - i - 1,
-        }))
-      )
-      .filter((d) => d.value)
-      .sort(compare);
+    const dist = (a, b) => Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2);
+    const validCells =
+      cells
+        .flatMap((row, i) =>
+          row.map((d, j) => ({
+            value: d,
+            y: row.length - j - 1,
+            x: cells.length - i - 1,
+          }))
+        )
+        .filter((d) => d.value)
+        .sort((a, b) => dist(a, { x: 0, y: 0 }) - dist(b, { x: 0, y: 0 }));
+
+    let current = validCells.shift();
+    const data = [current];
+    while (validCells.length) {
+      let min = Infinity,
+        minIndex = -1;
+      for (let i = 0; i < validCells.length; i++) {
+        const c = validCells[i];
+        const d = dist(current, c);
+        if (d < min) {
+          min = d;
+          minIndex = i;
+        }
+      }
+      const [d] = validCells.splice(minIndex, 1);
+      current = d;
+      data.push(d);
+    }
+    return data;
   }
 }
 

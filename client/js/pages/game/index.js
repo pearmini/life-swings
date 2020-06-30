@@ -205,6 +205,7 @@ class GamePage {
     setTimeout(() => {
       this.gameInfo.reset();
       this.pendulum.reset();
+      this.ground.reset();
       this.scene.reset([...this.databus.blocks, ...this.databus.bobs]);
     }, delay);
   }

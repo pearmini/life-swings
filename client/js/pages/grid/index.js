@@ -1,6 +1,5 @@
 import Rect from "../../utils/rect";
 import Page from "../../utils/page";
-import musicManger from "../../utils/musicManager";
 import musicManager from "../../utils/musicManager";
 
 class GridPage extends Page {
@@ -192,7 +191,7 @@ class GridPage extends Page {
         j >= 0 &&
         j < this.grids[0].length
       ) {
-        return this.grids[i][j];
+        return Math.min(1, this.grids[i][j]);
       } else {
         return 0;
       }
@@ -202,6 +201,8 @@ class GridPage extends Page {
     let same = true;
     let survive = new Set([2, 3]),
       born = new Set([3]);
+
+    // console.log(survive, born, this.grids)
     if (this.rule) {
       survive = new Set(this.rule.survive);
       born = new Set(this.rule.born);
@@ -238,11 +239,13 @@ class GridPage extends Page {
       }
       newGrids.push(newRow);
     }
+
     this.grids = newGrids;
     return same;
   }
 
   formGrids(width, height, cells) {
+    // console.log(cells);
     const data = [];
     const cellHeight = cells.length;
     const cellWidth = cells.length ? cells[0].length : 0;

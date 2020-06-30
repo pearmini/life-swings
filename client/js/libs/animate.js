@@ -25,6 +25,8 @@ export function tweenAnimation(from, to, duration, type, cb) {
     const currentTime = Date.now();
     const currentDuration = currentTime - lastTime;
     if (currentDuration >= totalDuration) {
+      const value = fn(totalDuration, from, to - from, totalDuration);
+      cb(value);
       cancelAnimationFrame(aniId);
     } else {
       const value = fn(currentDuration, from, to - from, totalDuration);

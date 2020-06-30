@@ -90,14 +90,23 @@ class OverPage extends Page {
   getState = (data) => {
     const rowcnt = data.length;
     const colcnt = data.length ? data[0].length : 0;
+    const newData = this.copy(data);
     const validGrids = this.grids.slice(0, this.nextIndex - 1);
     validGrids.forEach(({ x, y }) => {
       const dx = rowcnt - x - 1;
       const dy = colcnt - y - 1;
-      data[dx][dy] = 2;
+      newData[dx][dy] = 2;
     });
-    return data;
+    return newData;
   };
+
+  copy(array) {
+    const newArray = [];
+    for (let row of array) {
+      newArray.push([...row]);
+    }
+    return newArray;
+  }
 
   wrapper = (data) => {
     const col = data.length ? data[0].length : 0;
@@ -116,7 +125,7 @@ class OverPage extends Page {
   };
 
   renderGrids = (data) => {
-    const matrixSize = this.cardHeight;
+    const matrixSize = this.cardHeight * 0.5;
     const row = data.length;
     const col = data.length ? data[0].length : 0;
     const maxCellSize = 25;

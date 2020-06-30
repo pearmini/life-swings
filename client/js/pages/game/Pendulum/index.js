@@ -9,6 +9,15 @@ const { bobSize, armLength, locationY } = pendulumConfig;
 class Pendulum extends Sprite {
   constructor(scene) {
     super(scene);
+  }
+
+  reset() {
+    if (this.instance) {
+      this.scene.remove(this.instance);
+      this.instance.geometry && this.instance.geometry.dispose();
+      this.instance.material && this.instance.material.dispose();
+    }
+
     this.instance = new THREE.Object3D();
     this.bob = new Bob(this.instance, 0, -(armLength + bobSize / 2), 0);
     this.arm = new Arm(this.instance, 0, -armLength / 2, 0);
@@ -19,10 +28,7 @@ class Pendulum extends Sprite {
     this.instance.rotateOnAxis(this.rotateAxis, this.angle);
     this.gravity = 0.005;
     this.needsUpdateGravity = false;
-  }
-
-  reset() {
-    this.instance.visible = true;
+    this.isRendered = false;
     this.location.set(0, locationY, 0);
   }
 
@@ -69,10 +75,10 @@ class Pendulum extends Sprite {
   }
 
   update() {
-    const threshold = 0.01;
+    const threshold = 0.1;
     if (this.needsUpdateGravity && this.aVelocity < threshold) {
-      const max = 0.008;
-      const min = 0.003;
+      const max = 0.009;
+      const min = 0.004;
       this.gravity = min + Math.random() * (max - min);
       this.needsUpdateGravity = false;
     }
