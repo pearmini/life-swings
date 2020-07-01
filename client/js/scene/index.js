@@ -38,10 +38,8 @@ class Scene {
     this.renderer.render(this.instance, this.camera.instance);
   }
 
-  reset(deleteObjList) {
-    this.camera.reset();
-    this.light.reset();
-    deleteObjList.forEach((obj) => {
+  clear(array) {
+    array.forEach((obj) => {
       const instance = obj.instance;
       this.instance.remove(instance);
       if (instance.geometry) {
@@ -51,6 +49,11 @@ class Scene {
         instance.material.dispose();
       }
     });
+  }
+
+  reset() {
+    this.camera.reset();
+    this.light.reset();
   }
 }
 

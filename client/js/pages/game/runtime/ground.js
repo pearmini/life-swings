@@ -1,5 +1,4 @@
 import Sprite from "../../../utils/sprite";
-import animate from "../../../libs/animate";
 
 class Ground extends Sprite {
   constructor(scene) {
@@ -12,28 +11,18 @@ class Ground extends Sprite {
     });
     this.instance = new THREE.Mesh(groundGeometry, material);
     this.instance.receiveShadow = true;
+    this.instance.rotation.x = -Math.PI / 2;
+    this.instance.position.y = -16 / 3.2;
   }
 
   updateLocation(location) {
-    animate(
-      this.instance.position,
-      {
-        x: this.instance.position.x,
-        y: this.instance.position.y,
-        z: this.instance.position.z,
-      },
-      {
-        x: location.x - Math.PI / 2,
-        y: location.y - 16 / 3.2,
-        z: location.z,
-      },
-      0.5
-    );
+    this.instance.position.x = location.x;
+    this.instance.position.z = location.z;
   }
 
   reset() {
-    this.instance.rotation.x = -Math.PI / 2;
-    this.instance.position.y = -16 / 3.2;
+    this.instance.position.x = 0;
+    this.instance.position.z = 0;
   }
 }
 

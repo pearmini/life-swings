@@ -162,15 +162,24 @@ class GridPage extends Page {
 
     this.clearButton.drawToCanvas(this.context, this.update);
     this.homeButton.drawToCanvas(this.context, this.update);
+
+    // 绘制标题
+    if (!this.isPlaying) {
+      const title = this.name ? this.name : "随意创造";
+      this.context.textAlign = "center";
+      this.context.fillStyle = "black";
+      this.context.font = "bold 30px '字体','字体','微软雅黑','宋体'";
+      this.context.fillText(title, this.width / 2, this.height * 0.2);
+    }
   };
 
   render = (context, width, height, update, data, canvas) => {
-    const { cells = [[]], canEdit = true, level, rule } = data || {};
+    const { cells = [[]], canEdit = true, level, rule, name } = data || {};
     this.level = level;
     this.cells = cells;
     this.rule = rule;
-    this.row = 100;
-    this.col = 100;
+    this.row = 101;
+    this.col = 101;
     this.grids = this.formGrids(this.row, this.col, cells);
     this.context = context;
     this.width = width;
@@ -179,6 +188,7 @@ class GridPage extends Page {
     this.cellSize = 20;
     this.canEdit = canEdit;
     this.canvas = canvas;
+    this.name = name;
     this.renderGrids();
   };
 
@@ -283,7 +293,7 @@ class GridPage extends Page {
       return x >= startX && x <= endX && y >= startY && y <= endY;
     };
 
-    if (this.canEdit) {
+    if (this.canEdit && !this.isPlaying) {
       for (let i = 0; i < this.grids.length; i++) {
         const row = this.grids[i];
         for (let j = 0; j < row.length; j++) {

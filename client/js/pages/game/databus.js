@@ -4,7 +4,7 @@ class DataBus {
   }
 
   reset(data) {
-    const { level, cells, rule } = this.getInfo(data);
+    const { level, cells, rule, name } = this.getInfo(data);
     this.score = 0;
     this.rule = rule;
     this.blocks = [];
@@ -17,6 +17,7 @@ class DataBus {
     this.currentBob = null;
     this.gameOver = false;
     this.level = level;
+    this.name = name;
   }
 
   getInfo(data) {
@@ -34,17 +35,16 @@ class DataBus {
 
   traverse(cells) {
     const dist = (a, b) => Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2);
-    const validCells =
-      cells
-        .flatMap((row, i) =>
-          row.map((d, j) => ({
-            value: d,
-            y: row.length - j - 1,
-            x: cells.length - i - 1,
-          }))
-        )
-        .filter((d) => d.value)
-        .sort((a, b) => dist(a, { x: 0, y: 0 }) - dist(b, { x: 0, y: 0 }));
+    const validCells = cells
+      .flatMap((row, i) =>
+        row.map((d, j) => ({
+          value: d,
+          y: row.length - j - 1,
+          x: cells.length - i - 1,
+        }))
+      )
+      .filter((d) => d.value)
+      .sort((a, b) => dist(a, { x: 0, y: 0 }) - dist(b, { x: 0, y: 0 }));
 
     let current = validCells.shift();
     const data = [current];

@@ -8,6 +8,7 @@ class GameInfo {
   }
 
   updateScore(score) {
+    this.score.instance.visible = true;
     const scoreString = "" + Math.floor(score * 100);
     this.score.updateText(scoreString);
     this.score.render();
@@ -15,17 +16,15 @@ class GameInfo {
 
   showSuccess() {
     this.msg.instance.visible = true;
-    this.score.instance.visible = false;
+    this.hideScore();
     this.msg.render();
     setTimeout(() => {
       this.msg.instance.visible = false;
     }, 1500);
   }
 
-  reset() {
-    this.score.isRendered = false;
-    this.score.instance.visible = true;
-    this.scene.remove(this.score.instance);
+  hideScore() {
+    this.score.instance.visible = false;
   }
 }
 

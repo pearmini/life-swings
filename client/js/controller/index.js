@@ -78,6 +78,7 @@ class GameController {
             cells: nextLevel.data,
             level: nextLevel.index,
             rule: nextLevel.rule,
+            name: nextLevel.name,
           });
         }
       },
@@ -93,13 +94,14 @@ class GameController {
       scene,
       restartGame: (level) => {
         musicManager.start.play();
-        const { data, rule } = this.gameModel.levels.find(
+        const { data, rule, name } = this.gameModel.levels.find(
           (d) => d.index === level
         );
         this.gameModel.setStage("game", {
           cells: data,
           level,
           rule,
+          name
         });
       },
       gotoHome: () => this.gameModel.setStage("home"),
@@ -115,13 +117,14 @@ class GameController {
             userInfo: this.gameModel.userInfo,
           });
         } else {
-          const { data, rule } = this.gameModel.levels.find(
+          const { data, rule, name } = this.gameModel.levels.find(
             (d) => d.index === level + 1
           );
           this.gameModel.setStage("game", {
             cells: data,
             level: level + 1,
             rule,
+            name
           });
         }
       },
@@ -132,13 +135,14 @@ class GameController {
       gotoHome: () => this.gameModel.setStage("home"),
       startGame: (level) => {
         musicManager.start.play();
-        const { data, rule } = this.gameModel.levels.find(
+        const { data, rule, name } = this.gameModel.levels.find(
           (d) => d.index === level
         );
         this.gameModel.setStage("game", {
           cells: data,
           level,
           rule,
+          name,
         });
       },
       startGrid: (level) => {
@@ -148,6 +152,7 @@ class GameController {
           cells: d.data,
           level,
           rule: d.rule,
+          name: d.name,
         };
         this.gameModel.setStage("grid", data);
       },

@@ -12,6 +12,7 @@ const F = 1;
 const RR = 2;
 const RL = 3;
 
+
 class GamePage {
   constructor({ scene, showGameOverPage, showGridPage, updateScore }) {
     this.aniId = 0;
@@ -29,8 +30,10 @@ class GamePage {
   restart(data) {
     // 清除状态
     this.ground.reset();
-    this.scene.reset([...this.databus.blocks, ...this.databus.bobs]);
+    this.scene.clear([...this.databus.blocks, ...this.databus.bobs]);
+    this.scene.reset();
     this.pendulum.reset();
+    // this.gameInfo.reset();
     this.databus.reset(data);
 
     // 初始化场景
@@ -167,6 +170,7 @@ class GamePage {
           canEdit: false,
           level: this.databus.level,
           rule: this.databus.rule,
+          name: this.databus.name,
         });
       }, delay);
       this.databus.score = 1;
@@ -203,10 +207,8 @@ class GamePage {
       level: this.databus.level,
     });
     setTimeout(() => {
-      this.gameInfo.reset();
-      this.pendulum.reset();
-      this.ground.reset();
-      this.scene.reset([...this.databus.blocks, ...this.databus.bobs]);
+      this.gameInfo.hideScore();
+      this.scene.clear([...this.databus.blocks, ...this.databus.bobs]);
     }, delay);
   }
 
