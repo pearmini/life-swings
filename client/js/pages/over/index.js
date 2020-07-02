@@ -159,8 +159,8 @@ class OverPage extends Page {
     this.context.restore();
   };
 
-  handleTouchStart(e) {
-    const { x, y } = super.handleTouchStart(e);
+  handleTouchEnd(e) {
+    const { x, y } = super.getMousePosition(e);
     for (let button of this.buttons) {
       if (button.isIn(x, y)) {
         button.onClick(e);

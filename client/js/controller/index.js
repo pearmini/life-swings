@@ -101,7 +101,7 @@ class GameController {
           cells: data,
           level,
           rule,
-          name
+          name,
         });
       },
       gotoHome: () => this.gameModel.setStage("home"),
@@ -124,7 +124,7 @@ class GameController {
             cells: data,
             level: level + 1,
             rule,
-            name
+            name,
           });
         }
       },
@@ -170,20 +170,36 @@ class GameController {
 
     // 设置事件监听
     canvas.addEventListener("touchstart", this.handleTouchStart);
+    canvas.addEventListener("touchend", this.handleTouchEnd);
+    canvas.addEventListener("touchmove", this.handleTouchMove);
   }
+
+  handleTouchEnd = (e) => {
+    const stage = this.gameModel.getStage();
+    if (stage === "home") {
+      this.gameView.homePage.handleTouchEnd(e);
+    } else if (stage === "game-over") {
+      this.gameView.gameOverPage.handleTouchEnd(e);
+    } else if (stage === "grid") {
+      this.gameView.girdPage.handleTouchEnd(e);
+    } else if (stage === "level") {
+      this.gameView.levelPage.handleTouchEnd(e);
+    }
+  };
+
+  handleTouchMove = (e) => {
+    const stage = this.gameModel.getStage();
+    if (stage === "grid") {
+      this.gameView.girdPage.handleTouchMove(e);
+    }
+  };
 
   handleTouchStart = (e) => {
     const stage = this.gameModel.getStage();
-    if (stage === "home") {
-      this.gameView.homePage.handleTouchStart(e);
+    if (stage === "grid") {
+      this.gameView.girdPage.handleTouchStart(e);
     } else if (stage === "game") {
       this.gameView.gamePage.handleTouchStart(e);
-    } else if (stage === "game-over") {
-      this.gameView.gameOverPage.handleTouchStart(e);
-    } else if (stage === "grid") {
-      this.gameView.girdPage.handleTouchStart(e);
-    } else if (stage === "level") {
-      this.gameView.levelPage.handleTouchStart(e);
     }
   };
 }

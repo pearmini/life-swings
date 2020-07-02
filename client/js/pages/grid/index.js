@@ -19,14 +19,10 @@ class GridPage extends Page {
       this.ffButton,
       this.stopButton,
     ];
-    this.isPlaying = false;
-    this.isFast = false;
+
     this.nextLevel = nextLevel;
     this.gotoHome = gotoHome;
     this.speed = 1000;
-    this.playButton.visible = true;
-    this.stopButton.visible = false;
-    this.ffButton.visible = false;
   }
 
   backHome = () => {
@@ -58,6 +54,9 @@ class GridPage extends Page {
 
   clear = () => {
     this.stop();
+    this.scale = 1;
+    this.offsetX = 0;
+    this.offsetY = 0;
     this.grids = this.formGrids(this.row, this.col, this.cells);
     this.renderGrids();
   };
@@ -102,23 +101,33 @@ class GridPage extends Page {
     this.context.lineWidth = lineWidth;
     this.matrixWidth = this.cellSize * col;
     this.matrixHeight = this.cellSize * row;
-    this.translateX = (this.width - this.matrixWidth) / 2;
-    this.translateY = (this.height - this.matrixHeight) / 2;
+    this.translateX = this.width / 2;
+    this.translateY = this.height / 2;
     this.context.translate(this.translateX, this.translateY);
 
     for (let i = 0; i < this.grids.length; i++) {
       const row = this.grids[i];
       for (let j = 0; j < row.length; j++) {
-        const x = j * this.cellSize;
-        const y = i * this.cellSize;
+        const x = j * this.cellSize - this.matrixWidth / 2;
+        const y = i * this.cellSize - this.matrixHeight / 2;
         if (row[j]) {
-          this.context.fillRect(x, y, this.cellSize, this.cellSize);
+          this.context.fillRect(
+            x * this.scale + this.offsetX,
+            y * this.scale + this.offsetY,
+            this.cellSize * this.scale,
+            this.cellSize * this.scale
+          );
         }
-        this.context.strokeRect(x, y, this.cellSize, this.cellSize);
+        this.context.strokeRect(
+          x * this.scale + this.offsetX,
+          y * this.scale + this.offsetY,
+          this.cellSize * this.scale,
+          this.cellSize * this.scale
+        );
       }
     }
-    this.context.restore();
 
+    this.context.restore();
     const selectedButton = this.isFast
       ? this.stopButton
       : this.isPlaying
@@ -178,8 +187,7 @@ class GridPage extends Page {
     this.level = level;
     this.cells = cells;
     this.rule = rule;
-    this.row = 101;
-    this.col = 101;
+    this.row = this.col = this.cells.length % 2 ? 101 : 100;
     this.grids = this.formGrids(this.row, this.col, cells);
     this.context = context;
     this.width = width;
@@ -189,6 +197,15 @@ class GridPage extends Page {
     this.canEdit = canEdit;
     this.canvas = canvas;
     this.name = name;
+    this.scale = 1;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.isPlaying = false;
+    this.isFast = false;
+    this.playButton.visible = true;
+    this.stopButton.visible = false;
+    this.ffButton.visible = false;
+    this.touchArray = [];
     this.renderGrids();
   };
 
@@ -212,7 +229,6 @@ class GridPage extends Page {
     let survive = new Set([2, 3]),
       born = new Set([3]);
 
-    // console.log(survive, born, this.grids)
     if (this.rule) {
       survive = new Set(this.rule.survive);
       born = new Set(this.rule.born);
@@ -222,6 +238,7 @@ class GridPage extends Page {
       const row = this.grids[i];
       const newRow = [];
       for (let j = 0; j < row.length; j++) {
+        const current = this.grids[i][j];
         const roundCells = [
           [i - 1, j - 1],
           [i - 1, j],
@@ -232,7 +249,6 @@ class GridPage extends Page {
           [i + 1, j],
           [i + 1, j + 1],
         ];
-        const current = this.grids[i][j];
         const sum = roundCells
           .map(([x, y]) => getState(x, y))
           .reduce((total, cur) => total + cur);
@@ -255,7 +271,6 @@ class GridPage extends Page {
   }
 
   formGrids(width, height, cells) {
-    // console.log(cells);
     const data = [];
     const cellHeight = cells.length;
     const cellWidth = cells.length ? cells[0].length : 0;
@@ -277,19 +292,92 @@ class GridPage extends Page {
     return data;
   }
 
-  handleTouchStart(e) {
-    const { x, y } = super.handleTouchStart(e);
+  handleTouchMove(e) {
+    this.isMove = true;
+    const { touches } = e;
+
+    // 处理缩放
+    if (touches.length === 2) {
+      const dist = (a, b) =>
+        Math.sqrt(
+          Math.pow(a.pageX - b.pageX, 2) + Math.pow(a.pageY - b.pageY, 2)
+        );
+      const [preA, preB] = this.preTouches;
+      const [curA, curB] = touches;
+      const preDist = dist(preA, preB);
+      const curDist = dist(curA, curB);
+      const diff = curDist - preDist;
+      const ratio = 0.005,
+        minScale = 0.5,
+        maxScale = 2;
+
+      // 限制距离
+      this.scale += diff * ratio;
+      this.scale = Math.min(this.scale, maxScale);
+      this.scale = Math.max(this.scale, minScale);
+    }
+
+    // 处理移动
+    for (let curTouch of touches) {
+      const preTouch = this.preTouches.find(
+        (d) => d.identifier === curTouch.identifier
+      );
+      const diffX = curTouch.pageX - preTouch.pageX;
+      const diffY = curTouch.pageY - preTouch.pageY;
+      this.offsetX += diffX;
+      this.offsetY += diffY;
+
+      // 防止移出屏幕
+      this.offsetX = Math.min(
+        (this.matrixWidth / 2) * this.scale - this.translateX,
+        this.offsetX
+      );
+      this.offsetX = Math.max(
+        (-this.matrixWidth / 2) * this.scale + this.translateX,
+        this.offsetX
+      );
+
+      this.offsetY = Math.min(
+        (this.matrixHeight / 2) * this.scale - this.translateY,
+        this.offsetY
+      );
+      this.offsetY = Math.max(
+        (-this.matrixHeight / 2) * this.scale + this.translateY,
+        this.offsetY
+      );
+    }
+
+    this.preTouches = touches;
+    this.renderGrids();
+  }
+
+  handleTouchEnd(e) {
+    const { x, y } = this.getMousePosition(e);
+
+    if (this.isMove) {
+      return;
+    }
+
     for (let button of this.buttons) {
       if (button.isIn(x, y) && button.visible) {
         button.onClick(e);
         return;
       }
     }
+
     const inGrid = (i, j) => {
-      const startX = j * this.cellSize + this.translateX;
-      const endX = startX + this.cellSize;
-      const startY = i * this.cellSize + this.translateY;
-      const endY = startY + this.cellSize;
+      const startX =
+        j * this.cellSize * this.scale +
+        this.translateX +
+        this.offsetX -
+        (this.matrixWidth / 2) * this.scale;
+      const endX = startX + this.cellSize * this.scale;
+      const startY =
+        i * this.cellSize * this.scale +
+        this.translateY +
+        this.offsetY -
+        (this.matrixHeight / 2) * this.scale;
+      const endY = startY + this.cellSize * this.scale;
       return x >= startX && x <= endX && y >= startY && y <= endY;
     };
 
@@ -305,6 +393,12 @@ class GridPage extends Page {
         }
       }
     }
+  }
+
+  handleTouchStart(e) {
+    const { touches } = e;
+    this.isMove = false;
+    this.preTouches = touches;
   }
 }
 

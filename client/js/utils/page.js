@@ -4,7 +4,7 @@ class Page {
     this.buttons = [];
   }
 
-  handleTouchStart(e) {
+  getMousePosition(e) {
     const pageX = e.changedTouches[0].pageX;
     const pageY = e.changedTouches[0].pageY;
     return {

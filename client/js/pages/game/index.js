@@ -12,7 +12,6 @@ const F = 1;
 const RR = 2;
 const RL = 3;
 
-
 class GamePage {
   constructor({ scene, showGameOverPage, showGridPage, updateScore }) {
     this.aniId = 0;
@@ -143,9 +142,9 @@ class GamePage {
     this.databus.nextIndex++;
     this.pendulum.updateBobColor(bobColor);
     this.pendulum.updateAcceleration();
+    this.ground.updateLocation(targetLocation);
     this.pendulum.updateLocation(targetLocation);
     this.scene.updateLocation(targetLocation);
-    this.ground.updateLocation(targetLocation);
     if (this.databus.level !== -1) {
       this.gameInfo.updateScore(this.databus.score);
     }
