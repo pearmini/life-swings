@@ -1,5 +1,4 @@
 import Sprite from "../utils/sprite";
-import animate from "../libs/animate";
 
 class Light extends Sprite {
   constructor(scene) {
@@ -35,30 +34,8 @@ class Light extends Sprite {
 
   updateLocation(location) {
     const [_, shadowLight, shadowTarget] = this.instance;
-    animate(
-      shadowTarget.position,
-      {
-        x: shadowTarget.position.x,
-        y: shadowTarget.position.y,
-        z: shadowTarget.position.z,
-      },
-      location,
-      0.5
-    );
-    animate(
-      shadowLight.position,
-      {
-        x: shadowLight.position.x,
-        y: shadowLight.position.y,
-        z: shadowLight.position.z,
-      },
-      {
-        x: location.x + 10,
-        y: location.y + 30,
-        z: location.z + 20,
-      },
-      0.5
-    );
+    shadowTarget.position.set(location.x, location.y, location.z);
+    shadowLight.position.set(location.x + 10, location.y + 30, location.z + 20);
   }
 
   reset() {

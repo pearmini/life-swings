@@ -32,7 +32,6 @@ class GamePage {
     this.scene.clear([...this.databus.blocks, ...this.databus.bobs]);
     this.scene.reset();
     this.pendulum.reset();
-    // this.gameInfo.reset();
     this.databus.reset(data);
 
     // 初始化场景
@@ -142,7 +141,7 @@ class GamePage {
     this.databus.nextIndex++;
     this.pendulum.updateBobColor(bobColor);
     this.pendulum.updateAcceleration();
-    this.ground.updateLocation(targetLocation);
+    // this.ground.updateLocation(targetLocation);
     this.pendulum.updateLocation(targetLocation);
     this.scene.updateLocation(targetLocation);
     if (this.databus.level !== -1) {

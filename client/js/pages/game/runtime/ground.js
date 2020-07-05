@@ -3,7 +3,7 @@ import Sprite from "../../../utils/sprite";
 class Ground extends Sprite {
   constructor(scene) {
     super(scene);
-    const groundGeometry = new THREE.PlaneGeometry(200, 200);
+    const groundGeometry = new THREE.PlaneGeometry(10000, 10000);
     const material = new THREE.ShadowMaterial({
       transparent: true,
       color: 0x000000,
