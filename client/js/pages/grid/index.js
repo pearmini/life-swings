@@ -11,6 +11,8 @@ class GridPage extends Page {
     this.homeButton = new Rect("icons/home-fill-black.png", this.backHome);
     this.clearButton = new Rect("icons/clear.png", this.clear);
     this.rightButton = new Rect("icons/right-fill-black.png", this.goNext);
+    this.saveButton = new Rect("icons/save-fill.png");
+    this.helpButton = new Rect("icons/help-fill.png");
     this.buttons = [
       this.playButton,
       this.homeButton,
@@ -18,6 +20,7 @@ class GridPage extends Page {
       this.rightButton,
       this.ffButton,
       this.stopButton,
+      this.saveButton,
     ];
 
     this.nextLevel = nextLevel;
@@ -145,6 +148,7 @@ class GridPage extends Page {
 
     if (!this.canEdit) {
       this.rightButton.visible = true;
+      this.saveButton.visible = false;
       this.rightButton.set(
         this.width * 0.9 - this.iconSize,
         this.height - 100,
@@ -154,6 +158,14 @@ class GridPage extends Page {
       this.rightButton.drawToCanvas(this.context, this.update);
     } else {
       this.rightButton.visible = false;
+      this.saveButton.visible = true;
+      this.saveButton.set(
+        this.width * 0.9 - this.iconSize,
+        this.height - 100,
+        this.iconSize,
+        this.iconSize
+      );
+      this.saveButton.drawToCanvas(this.context, this.update);
     }
 
     this.clearButton.set(
@@ -168,7 +180,9 @@ class GridPage extends Page {
       this.iconSize,
       this.iconSize
     );
+    this.helpButton.set(this.width * 0.1, 40, this.iconSize, this.iconSize);
 
+    this.helpButton.drawToCanvas(this.context, this.update);
     this.clearButton.drawToCanvas(this.context, this.update);
     this.homeButton.drawToCanvas(this.context, this.update);
 

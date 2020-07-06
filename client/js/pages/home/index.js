@@ -7,14 +7,26 @@ class HomePage extends Page {
     startGame,
     showGridPage,
     showLevelPage,
+    showMy,
+    showRank,
+    showHelp,
     isLoading = true,
   }) {
     super(scene);
     this.title = new Rect("images/title.png");
+    this.classicTitle = new Rect("images/classic.png", showGridPage);
     this.startButton = new Rect("images/play.png", startGame);
-    this.classicButton = new Rect("icons/classic.png", showGridPage);
+    this.rankButton = new Rect("icons/rank.png", showRank);
+    this.myButton = new Rect("icons/my.png", showMy);
     this.levelButton = new Rect("icons/level.png", showLevelPage);
-    this.buttons = [this.startButton, this.classicButton, this.levelButton];
+    this.helpButton = new Rect("icons/help.png", showHelp);
+    this.buttons = [
+      this.startButton,
+      this.classicTitle,
+      this.levelButton,
+      this.rankButton,
+      this.helpButton,
+    ];
     this.isLoading = isLoading;
     this.loadingTimer = null;
   }
@@ -71,6 +83,8 @@ class HomePage extends Page {
       }
       context.fillStyle = "rgba(0,0,0,0.3)";
       context.fillRect(0, height * 0.8, width, height * 0.2);
+
+      // 绘制开始按钮
       const startButtonWidth = width * 0.5,
         startButtonHeight = (startButtonWidth * 3) / 10;
 
@@ -91,29 +105,47 @@ class HomePage extends Page {
 
       this.startButton.set(
         (width - startButtonWidth) / 2,
-        height * 0.8 - 100,
+        height * 0.8 - 120,
         startButtonWidth,
         startButtonHeight,
         imagURL
       );
       this.startButton.drawToCanvas(context, update);
 
-      const iconSize = height * 0.2 * 0.5;
-      const iconY = height * 0.8 + (height * 0.2 - iconSize) / 2;
-      this.classicButton.set(
-        (width - iconSize) / 2 + width * 0.15,
-        iconY,
-        iconSize,
-        iconSize
+      this.helpButton.set(20, 40, 50, 50);
+      this.helpButton.drawToCanvas(context, update);
+
+      // 绘制继续经典模式的文字
+      const classicWidth = 70;
+      const classicHeight = (classicWidth * 127) / 492;
+      this.classicTitle.set(
+        (width - classicWidth) / 2,
+        height * 0.8 - 40,
+        classicWidth,
+        classicHeight
       );
-      this.classicButton.drawToCanvas(context, update);
+      this.classicTitle.drawToCanvas(context, update);
+
+      const iconWidth = height * 0.2 * 0.3;
+      const iconHeight = (iconWidth * 763) / 507;
+      const iconY = height * 0.8 + (height * 0.2 - iconHeight) / 2,
+        padding = 0.26;
       this.levelButton.set(
-        (width - iconSize) / 2 - width * 0.15,
+        (width - iconWidth) / 2 - width * padding,
         iconY,
-        iconSize,
-        iconSize
+        iconWidth,
+        iconHeight
+      );
+      this.rankButton.set((width - iconWidth) / 2, iconY, iconWidth, iconHeight);
+      this.myButton.set(
+        (width - iconWidth) / 2 + width * padding,
+        iconY,
+        iconWidth,
+        iconHeight
       );
       this.levelButton.drawToCanvas(context, update);
+      this.rankButton.drawToCanvas(context, update);
+      this.myButton.drawToCanvas(context, update);
     }
   };
 

@@ -6,7 +6,6 @@ import musicManager from "../../../utils/musicManager";
 const { bobSize } = pendulumConfig;
 const { height } = blockConfig;
 
-const RR = 2;
 const RL = 3;
 
 class Bob extends Sprite {
