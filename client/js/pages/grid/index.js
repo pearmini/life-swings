@@ -12,7 +12,9 @@ class GridPage extends Page {
     this.clearButton = new Rect("icons/clear.png", this.clear);
     this.rightButton = new Rect("icons/right-fill-black.png", this.goNext);
     this.saveButton = new Rect("icons/save-fill.png");
-    this.helpButton = new Rect("icons/help-fill.png");
+    this.helpButton = new Rect("icons/help-fill.png", this.help);
+    this.backButton = new Rect("icons/clear.png", this.back);
+    this.nextPageButton = new Rect("icons/right-fill-black.png", this.pageNext);
     this.buttons = [
       this.playButton,
       this.homeButton,
@@ -21,11 +23,15 @@ class GridPage extends Page {
       this.ffButton,
       this.stopButton,
       this.saveButton,
+      this.helpButton,
+      this.backButton,
+      this.nextPageButton,
     ];
-
+    this.isHelp = false;
     this.nextLevel = nextLevel;
     this.gotoHome = gotoHome;
     this.speed = 1000;
+    this.helpIndex = 0;
   }
 
   backHome = () => {
@@ -38,7 +44,6 @@ class GridPage extends Page {
     this.stopButton.visible = true;
     this.ffButton.visible = false;
     this.isFast = true;
-    this.speed = 500;
     this.isPlaying = true;
     clearInterval(this.timer);
     this.timer = setInterval(() => {
@@ -47,7 +52,7 @@ class GridPage extends Page {
       if (state) {
         this.stop();
       }
-    }, this.speed);
+    }, this.speed / 2);
   };
 
   goNext = () => {
@@ -86,9 +91,34 @@ class GridPage extends Page {
     this.ffButton.visible = false;
     this.isPlaying = false;
     this.isFast = false;
-    this.speed = 1000;
     clearInterval(this.timer);
     this.renderGrids();
+  };
+
+  help = () => {
+    this.isHelp = true;
+    this.buttons.forEach((b) => (b.visible = false));
+    this.backButton.visible = true;
+    this.nextPageButton.visible = true;
+    this.renderHelp();
+  };
+
+  back = () => {
+    this.isHelp = false;
+    this.buttons.forEach((b) => (b.visible = true));
+    this.backButton.visible = false;
+    this.nextPageButton.visible = false;
+    this.renderGrids();
+  };
+
+  pageNext = () => {
+    this.helpIndex++;
+    if (this.helpIndex >= 6) {
+      this.renderGrids();
+      this.helpIndex = 0;
+    } else {
+      this.renderHelp();
+    }
   };
 
   renderGrids = () => {
@@ -146,28 +176,6 @@ class GridPage extends Page {
 
     selectedButton.drawToCanvas(this.context, this.update);
 
-    if (!this.canEdit) {
-      this.rightButton.visible = true;
-      this.saveButton.visible = false;
-      this.rightButton.set(
-        this.width * 0.9 - this.iconSize,
-        this.height - 100,
-        this.iconSize,
-        this.iconSize
-      );
-      this.rightButton.drawToCanvas(this.context, this.update);
-    } else {
-      this.rightButton.visible = false;
-      this.saveButton.visible = true;
-      this.saveButton.set(
-        this.width * 0.9 - this.iconSize,
-        this.height - 100,
-        this.iconSize,
-        this.iconSize
-      );
-      this.saveButton.drawToCanvas(this.context, this.update);
-    }
-
     this.clearButton.set(
       this.width / 2 + 10,
       this.height - 100,
@@ -181,10 +189,7 @@ class GridPage extends Page {
       this.iconSize
     );
     this.helpButton.set(this.width * 0.1, 40, this.iconSize, this.iconSize);
-
-    this.helpButton.drawToCanvas(this.context, this.update);
     this.clearButton.drawToCanvas(this.context, this.update);
-    this.homeButton.drawToCanvas(this.context, this.update);
 
     // 绘制标题
     if (!this.isPlaying) {
@@ -193,8 +198,118 @@ class GridPage extends Page {
       this.context.fillStyle = "black";
       this.context.font = "bold 30px '微软雅黑'";
       this.context.fillText(title, this.width / 2, this.height * 0.2);
+      this.helpButton.drawToCanvas(this.context, this.update);
+      this.homeButton.drawToCanvas(this.context, this.update);
+      this.helpButton.visible = true;
+      this.homeButton.visible = true;
+
+      if (!this.canEdit) {
+        this.rightButton.visible = true;
+        this.saveButton.visible = false;
+        this.rightButton.set(
+          this.width * 0.9 - this.iconSize,
+          this.height - 100,
+          this.iconSize,
+          this.iconSize
+        );
+        this.rightButton.drawToCanvas(this.context, this.update);
+      } else {
+        this.rightButton.visible = false;
+        this.saveButton.visible = true;
+        this.saveButton.set(
+          this.width * 0.9 - this.iconSize,
+          this.height - 100,
+          this.iconSize,
+          this.iconSize
+        );
+        this.saveButton.drawToCanvas(this.context, this.update);
+      }
+    } else {
+      this.helpButton.visible = false;
+      this.homeButton.visible = false;
+      this.rightButton.visible = false;
+      this.saveButton.visible = false;
     }
   };
+
+  renderHelp = () => {
+    this.context.fillStyle = "white";
+    this.context.fillRect(0, 0, this.width, this.height);
+    this.backButton.set(this.width * 0.1, 40, this.iconSize, this.iconSize);
+    this.nextPageButton.set(
+      (this.width - this.iconSize) / 2,
+      this.height - 100,
+      this.iconSize,
+      this.iconSize
+    );
+    this.backButton.drawToCanvas(this.context, this.update);
+    this.nextPageButton.drawToCanvas(this.context, this.update);
+
+    let content = [];
+    if (this.helpIndex === 0) {
+      content = [
+        `欢迎来到“经典模式”。`,
+        "生命游戏中，每一个细胞有两种状态：存活或者死亡。黑色表示存活，白色代表死亡。",
+        "每一个细胞下一刻的状态由自身的状态，以及以自身为中心的周围八格细胞决定。",
+      ];
+    } else if (this.helpIndex === 1) {
+      content = [
+        "当前细胞为存活状态，周围存活的细胞低于2个时，该细胞下一刻变成死亡状态（模拟生命数量稀少）。",
+      ];
+    } else if (this.helpIndex === 2) {
+      content = [
+        "当前细胞为存活状态，周围存活的细胞为2个或者3个，该细胞下一刻继续存活。",
+      ];
+    } else if (this.helpIndex === 3) {
+      content = [
+        "当前细胞为存活状态，周围存活的细胞大于3个时，该细胞下一刻变成死亡状态（模式生命数量过多）。",
+      ];
+    } else if (this.helpIndex === 4) {
+      content = [
+        "当前细胞为死亡状态时，周围有3个存活细胞时，该细胞下一刻变成存活状态（模拟繁殖）。",
+      ];
+    } else if (this.helpIndex === 5) {
+      content = [`接下来请在“经典模式”，`, "展现创意，创建生命。"];
+    }
+    this.renderText(content);
+    this.update();
+  };
+
+  renderText(content) {
+    const lineHeight = 20;
+    const lines = [];
+    const contentWidth = this.width * 0.8;
+    const dots = new Set(["，", "。", "："]);
+    this.context.font = `normal ${lineHeight}px '微软雅黑'`;
+
+    for (let c of content) {
+      let s = "";
+      for (let ch of c) {
+        const w = this.context.measureText(s + ch).width;
+        if (w > contentWidth && !dots.has(ch)) {
+          lines.push(s);
+          s = ch;
+        } else {
+          s += ch;
+        }
+      }
+      lines.push(s, " ");
+    }
+
+    const contentHeight = lines.length * lineHeight * 1.5;
+
+    this.context.save();
+    this.context.translate(this.width / 2, (this.height - contentHeight) / 2);
+    this.context.textBaseline = "top";
+    this.context.textAlign = "middle";
+    this.context.fillStyle = "black";
+
+    lines.forEach((l, index) =>
+      this.context.fillText(l, 0, index * lineHeight * 1.5)
+    );
+
+    this.context.restore();
+  }
 
   render = (context, width, height, update, data, canvas) => {
     const { cells = [[]], canEdit = true, level, rule, name } = data || {};
@@ -395,7 +510,7 @@ class GridPage extends Page {
       return x >= startX && x <= endX && y >= startY && y <= endY;
     };
 
-    if (this.canEdit && !this.isPlaying) {
+    if (this.canEdit && !this.isPlaying && !this.isHelp) {
       for (let i = 0; i < this.grids.length; i++) {
         const row = this.grids[i];
         for (let j = 0; j < row.length; j++) {

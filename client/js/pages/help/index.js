@@ -57,6 +57,7 @@ class HelpPage extends Page {
     const padding = 20;
     const containerWidth = this.backgroundWidth - padding * 2;
     const lines = [];
+    const dots = new Set(["，", "。", "："]);
     this.context.fillStyle = "white";
     this.context.font = `normal ${lineHeight}px '微软雅黑'`;
     this.context.textBaseline = "top";
@@ -67,7 +68,7 @@ class HelpPage extends Page {
       let s = "";
       for (let ch of c) {
         const w = this.context.measureText(s + ch).width;
-        if (w > containerWidth) {
+        if (w > containerWidth && !dots.has(ch)) {
           lines.push(s);
           s = ch;
         } else {
