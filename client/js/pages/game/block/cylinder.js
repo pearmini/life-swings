@@ -1,10 +1,12 @@
 import BaseBlock from "./base";
+import animate from "../../../libs/animate";
 import { blockConfig } from "../../../../config";
 
 class CylinderBlock extends BaseBlock {
-  constructor(scene, x, y, z, width, height, colors) {
+  constructor(scene, x, y, z, width, height) {
     super(scene, x, y, z, width, height);
 
+    const colors = [0xffffff, 0xaaaaaa, 0x000000];
     const topColor = colors[0];
     const middleColor = colors[1];
     const bottomColor = colors[2];
@@ -51,8 +53,21 @@ class CylinderBlock extends BaseBlock {
     totalMesh.add(topMesh);
     totalMesh.add(middleMesh);
     totalMesh.add(bottomMesh);
+
+    this.topMaterial = topMaterial;
+    this.middleMaterial = middleMaterial;
+    this.bottomMaterial = bottomMaterial;
     this.instance = totalMesh;
     this.instance.position.set(x, y, z);
+  }
+
+  updateColor(colors) {
+    const topColor = colors[0];
+    const middleColor = colors[1];
+    const bottomColor = colors[2];
+    this.topMaterial.color = new THREE.Color(topColor);
+    this.middleMaterial.color = new THREE.Color(middleColor);
+    this.bottomMaterial.color = new THREE.Color(bottomColor);
   }
 }
 

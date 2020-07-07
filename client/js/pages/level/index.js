@@ -8,7 +8,6 @@ class LevelPage extends Page {
     this.homeButton = new Rect("icons/home-fill.png", gotoHome);
     this.rightButton = new Rect("icons/right-fill.png", this.nextPage);
     this.leftButton = new Rect("icons/left-fill.png", this.prePage);
-    this.title = new Rect("images/level_title.png");
     this.buttons = [this.homeButton, this.rightButton, this.leftButton];
     this.playButtons = [];
     this.page = 0;
@@ -200,17 +199,22 @@ class LevelPage extends Page {
   renderPage = () => {
     const iconSize = this.width * 0.1;
     const iconY = this.height * 0.8 + iconSize / 2;
-    const titleWidth = this.width * 0.12,
-      titleHeight = (titleWidth * 87) / 173;
     this.context.clearRect(0, 0, this.width, this.height);
     this.context.fillStyle = "rgba(0,0,0,0.3)";
     this.context.fillRect(0, 0, this.width, this.height);
-    this.title.set(
+    //绘制 title
+    this.context.font = `bold 25px '微软雅黑'`;
+    this.context.fillStyle = "white";
+    this.context.textBaseline = "bottom";
+    this.context.textAlign = "left";
+    const title = "选择关卡";
+    const titleWidth = this.context.measureText(title).width;
+    this.context.fillText(
+      title,
       (this.width - titleWidth) / 2,
-      this.height * 0.2 - titleHeight - iconSize / 2,
-      titleWidth,
-      titleHeight
+      this.height * 0.2 - 15
     );
+
     this.homeButton.set(this.width * 0.1, iconY, iconSize, iconSize);
     this.rightButton.set(
       this.width * 0.9 - iconSize,
@@ -237,7 +241,6 @@ class LevelPage extends Page {
     } else {
       this.leftButton.visible = false;
     }
-    this.title.drawToCanvas(this.context, this.update);
     this.homeButton.drawToCanvas(this.context, this.update);
   };
 

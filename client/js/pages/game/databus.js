@@ -18,6 +18,7 @@ class DataBus {
     this.gameOver = false;
     this.level = level;
     this.name = name;
+    this.colors = [];
   }
 
   getInfo(data) {

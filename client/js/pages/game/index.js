@@ -110,10 +110,19 @@ class GamePage {
   }
 
   moveToNextBlock() {
+    // 更新颜色
+    if (this.databus.currentBlock) {
+      const [_, ...colors] = this.databus.colors;
+      this.databus.currentBlock.updateColor(colors);
+    }
+
+    // 判断是否结束
     if (this.databus.nextIndex === this.databus.data.length) {
       this.gameOver(S);
       return;
     }
+
+    // 如果没有结束
     const d = this.databus.data[this.databus.nextIndex];
     this.cellSize = 30;
     const targetLocation = {
@@ -126,6 +135,7 @@ class GamePage {
     const isReverse = Math.floor(Math.random() * 2);
     const originColor = this.colorManager.pop();
     const colors = isReverse ? this.reverseArray(originColor) : originColor;
+    this.databus.colors = colors;
     const [bobColor, ...blockColors] = colors;
     this.databus.currentBlock = new Cylinder(
       this.scene.instance,
@@ -141,7 +151,6 @@ class GamePage {
     this.databus.nextIndex++;
     this.pendulum.updateBobColor(bobColor);
     this.pendulum.updateAcceleration();
-    // this.ground.updateLocation(targetLocation);
     this.pendulum.updateLocation(targetLocation);
     this.scene.updateLocation(targetLocation);
     if (this.databus.level !== -1) {

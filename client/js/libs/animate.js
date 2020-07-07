@@ -1,12 +1,20 @@
 import Tween from "./tween";
 
-export default function (obj, from, to, duration, delay = 0, type = "Linear") {
+export default function (
+  obj,
+  from,
+  to,
+  duration,
+  delay = 0,
+  type = "Linear",
+  cb = (value) => value
+) {
   for (let prop in to) {
     setTimeout(
       ((prop) => {
         return () => {
           tweenAnimation(from[prop], to[prop], duration, type, (value) => {
-            obj[prop] = value;
+            obj[prop] = cb(value);
           });
         };
       })(prop),

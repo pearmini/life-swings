@@ -118,7 +118,8 @@ class HelpPage extends Page {
     this.context.font = `bold 25px '微软雅黑'`;
     this.context.fillStyle = "white";
     this.context.textBaseline = "bottom";
-    const title = "游戏说明";
+    this.context.textAlign = "left";
+    const title = "游戏介绍";
     const titleWidth = this.context.measureText(title).width;
     this.context.fillText(
       title,
