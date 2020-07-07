@@ -7,19 +7,19 @@ class HomePage extends Page {
     startGame,
     showGridPage,
     showLevelPage,
-    showMy,
-    showRank,
-    showHelp,
+    showMyPage,
+    showRankPage,
+    showHelpPage,
     isLoading = true,
   }) {
     super(scene);
     this.title = new Rect("images/title.png");
     this.classicTitle = new Rect("images/classic.png", showGridPage);
     this.startButton = new Rect("images/play.png", startGame);
-    this.rankButton = new Rect("icons/rank.png", showRank);
-    this.myButton = new Rect("icons/my.png", showMy);
+    this.rankButton = new Rect("icons/rank.png", showRankPage);
+    this.myButton = new Rect("icons/my.png", showMyPage);
     this.levelButton = new Rect("icons/level.png", showLevelPage);
-    this.helpButton = new Rect("icons/help.png", showHelp);
+    this.helpButton = new Rect("icons/help.png", showHelpPage);
     this.buttons = [
       this.startButton,
       this.classicTitle,
@@ -112,7 +112,7 @@ class HomePage extends Page {
       );
       this.startButton.drawToCanvas(context, update);
 
-      this.helpButton.set(20, 40, 50, 50);
+      this.helpButton.set(20, 40, 40, 40);
       this.helpButton.drawToCanvas(context, update);
 
       // 绘制继续经典模式的文字

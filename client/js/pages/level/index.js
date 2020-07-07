@@ -54,7 +54,7 @@ class LevelPage extends Page {
     this.context.translate(translateX, translateY);
     this.context.fillStyle = "#3d3b3f";
     this.context.fillRect(0, 0, cardWidth, cardHeight * levels.length);
-    this.context.font = "bold 15px '字体','字体','微软雅黑','宋体'";
+    this.context.font = "bold 15px '微软雅黑'";
     this.context.textBaseline = "middle";
     this.context.textAlign = "left";
 
@@ -99,7 +99,7 @@ class LevelPage extends Page {
 
       if (!canPlay) {
         playButton.visible = false;
-        this.context.font = "bold 20px '字体','字体','微软雅黑','宋体'";
+        this.context.font = "bold 20px '微软雅黑'";
         this.context.fillStyle = "white";
         this.context.textBaseline = "middle";
         this.context.fillText(
@@ -125,7 +125,7 @@ class LevelPage extends Page {
           elButton.drawToCanvas(this.context, this.update);
           this.playButtons.push(elButton);
         } else {
-          this.context.font = "bold 20px '字体','字体','微软雅黑','宋体'";
+          this.context.font = "bold 20px '微软雅黑'";
           const value = score ? Math.floor(score.value * 100) : 0;
           this.context.fillStyle = "white";
           this.context.textBaseline = "middle";

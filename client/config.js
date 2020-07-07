@@ -45,6 +45,5 @@ export const musicConfig = {
   out: "audios/out.mp3",
   el: "audios/el.mp3",
   page: "audios/page.mp3",
-  end: "audios/end.mp3",
   start: "audios/start.mp3",
 };

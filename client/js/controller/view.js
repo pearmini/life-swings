@@ -3,6 +3,7 @@ import HomePage from "../pages/home/index";
 import GridPage from "../pages/grid/index";
 import GameOverPage from "../pages/over/index";
 import LevelPage from "../pages/level/index";
+import HelpPage from "../pages/help/index";
 
 class GameView {
   constructor() {}
@@ -17,6 +18,10 @@ class GameView {
     this.gameOverPage.hide();
     this.homePage.hide();
     this.gamePage.restart(data);
+  }
+  
+  showHelpPage(){
+    this.helpPage.show();
   }
 
   showLevelPage(data) {
@@ -45,6 +50,10 @@ class GameView {
 
   initHomePage(props) {
     this.homePage = new HomePage(props);
+  }
+
+  initHelpPage(props) {
+    this.helpPage = new HelpPage(props);
   }
 
   initLevelPage(props) {

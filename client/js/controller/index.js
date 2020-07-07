@@ -21,6 +21,8 @@ class GameController {
       this.gameView.showGridPage(data);
     } else if (stage === "level") {
       this.gameView.showLevelPage(data);
+    } else if (stage === "help") {
+      this.gameView.showHelpPage();
     }
   };
 
@@ -88,6 +90,7 @@ class GameController {
           levels: this.gameModel.levels,
           userInfo: this.gameModel.userInfo,
         }),
+      showHelpPage: () => this.gameModel.setStage("help"),
     };
 
     const gameOverPageProps = {
@@ -158,12 +161,18 @@ class GameController {
       },
     };
 
+    const helpPageProps = {
+      scene,
+      gotoHome: () => this.gameModel.setStage("home"),
+    };
+
     // 初始化 pages
     this.gameView.initGamePage(gamePageProps);
     this.gameView.initHomePage(homePageProps);
     this.gameView.initGameOverPage(gameOverPageProps);
     this.gameView.initGridPage(gridPageProps);
     this.gameView.initLevelPage(levelPageProps);
+    this.gameView.initHelpPage(helpPageProps);
 
     this.gameModel.setStage(initialStage);
     musicManager.enterGame.play();
@@ -184,6 +193,8 @@ class GameController {
       this.gameView.girdPage.handleTouchEnd(e);
     } else if (stage === "level") {
       this.gameView.levelPage.handleTouchEnd(e);
+    }else if(stage === "help"){
+      this.gameView.helpPage.handleTouchEnd(e);
     }
   };
 

@@ -188,10 +188,10 @@ class GridPage extends Page {
 
     // 绘制标题
     if (!this.isPlaying) {
-      const title = this.name ? this.name : "随意创造";
+      const title = this.name ? this.name : "经典模式";
       this.context.textAlign = "center";
       this.context.fillStyle = "black";
-      this.context.font = "bold 30px '字体','字体','微软雅黑','宋体'";
+      this.context.font = "bold 30px '微软雅黑'";
       this.context.fillText(title, this.width / 2, this.height * 0.2);
     }
   };
