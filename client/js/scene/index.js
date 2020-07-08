@@ -15,20 +15,32 @@ class Scene {
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
     // 创建场景中的物体
+    const offscreenCanvas = document.createElement("canvas");
+    const openDataContext = wx.getOpenDataContext();
+    const sharedCanvas = openDataContext.canvas;
     this.instance = new THREE.Scene();
     this.camera = new Camera(this.instance);
     this.light = new Light(this.instance);
-    this.canvas = new Canvas(this.camera.instance);
+    this.canvas = new Canvas(this.camera.instance, offscreenCanvas); // 用于绘制基本的页面
+    this.sharedCanvas = new Canvas(this.camera.instance, sharedCanvas, true); // 用于绘制排行版页面
     this.background = new Background(this.camera.instance);
-
-    // 添加辅助轴线
-    // const axesHelper = new THREE.AxesHelper(100);
-    // this.instance.add(axesHelper);
   }
 
   updateLocation(location) {
     this.camera.updateLocation(location);
     this.light.updateLocation(location);
+  }
+
+  showSharedCanvas() {
+    this.sharedCanvas.render();
+  }
+
+  hideSharedCanvas(){
+    this.sharedCanvas.hide();
+  }
+
+  updateSharedCanvas(){
+    this.sharedCanvas.update();
   }
 
   render() {

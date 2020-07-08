@@ -3,6 +3,7 @@
 	"setting": {
 		"urlCheck": true,
 		"es6": true,
+		"enhance": false,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true,
@@ -17,11 +18,10 @@
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
-		},
-		"enhance": true
+		}
 	},
 	"compileType": "game",
-	"libVersion": "2.2.5",
+	"libVersion": "2.11.3",
 	"appid": "wx98ef1757336a252c",
 	"projectname": "life-swings",
 	"miniprogramRoot": "client/",

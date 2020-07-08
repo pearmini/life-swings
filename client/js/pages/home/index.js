@@ -31,12 +31,6 @@ class HomePage extends Page {
     this.loadingTimer = null;
   }
 
-  setData(userInfo, levels) {
-    this.isLoading = false;
-    this.userInfo = userInfo;
-    this.levels = levels;
-  }
-
   renderLoading = (context, width, height, update) => {
     const start = Date.now();
     const radius = 20;
@@ -65,6 +59,13 @@ class HomePage extends Page {
   render = (context, width, height, update, data) => {
     context.fillStyle = "rgba(0,0,0,0.2)";
     context.fillRect(0, 0, width, height);
+
+    if (data) {
+      const { userInfo, levels, isLoading } = data;
+      this.userInfo = userInfo;
+      this.levels = levels;
+      this.isLoading = isLoading;
+    }
 
     const titleWidth = width * 0.65,
       titleHeight = titleWidth / 4;
@@ -136,7 +137,12 @@ class HomePage extends Page {
         iconWidth,
         iconHeight
       );
-      this.rankButton.set((width - iconWidth) / 2, iconY, iconWidth, iconHeight);
+      this.rankButton.set(
+        (width - iconWidth) / 2,
+        iconY,
+        iconWidth,
+        iconHeight
+      );
       this.myButton.set(
         (width - iconWidth) / 2 + width * padding,
         iconY,

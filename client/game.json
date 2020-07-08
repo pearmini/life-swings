@@ -1,4 +1,4 @@
 {
     "deviceOrientation": "portrait",
-    "openDataContext": "js/pages/list"
+    "openDataContext": "js/openDataContext"
 }

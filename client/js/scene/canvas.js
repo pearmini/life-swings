@@ -4,16 +4,20 @@ const { aspect } = globalConfig;
 const { frustumSize } = sceneConfig;
 
 class Canvas extends Sprite {
-  constructor(scene) {
+  constructor(scene, canvas, isSharedCanvas) {
     super(scene);
     // 设置 canvas
-    this.canvas = document.createElement("canvas");
+    this.isSharedCanvas = isSharedCanvas;
+    this.canvas = canvas;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.canvas.width = this.width * 2;
     this.canvas.height = this.height * 2;
-    this.context = this.canvas.getContext("2d");
-    this.context.scale(2, 2);
+
+    if (!this.isSharedCanvas) {
+      this.context = this.canvas.getContext("2d");
+      this.context.scale(2, 2);
+    }
 
     // 添加到场景中
     this.texture = new THREE.Texture(this.canvas);
@@ -32,9 +36,18 @@ class Canvas extends Sprite {
 
   render(cb, data) {
     super.render();
-    this.context.clearRect(0, 0, this.width, this.height);
-    cb &&
-      cb(this.context, this.width, this.height, this.update, data, this.canvas);
+    if (!this.isSharedCanvas) {
+      this.context.clearRect(0, 0, this.width, this.height);
+      cb &&
+        cb(
+          this.context,
+          this.width,
+          this.height,
+          this.update,
+          data,
+          this.canvas
+        );
+    }
     this.instance.visible = true;
     this.update();
   }

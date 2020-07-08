@@ -22,7 +22,9 @@ class GameController {
     } else if (stage === "level") {
       this.gameView.showLevelPage(data);
     } else if (stage === "help") {
-      this.gameView.showHelpPage();
+      this.gameView.showHelpPage(data);
+    } else if (stage === "rank") {
+      this.gameView.showRankPage(data);
     }
   };
 
@@ -32,14 +34,29 @@ class GameController {
       this.gameModel.getLevels(),
     ];
 
-    Promise.all(promiseArr).then(([userData, levelData]) => {
-      const levels = levelData.result.data.sort((a, b) => a.index - b.index),
-        userInfo = userData.result;
-      this.gameView.homePage.setData(userInfo, levels);
-      this.gameModel.levels = levels;
-      this.gameModel.userInfo = userInfo;
-      this.gameView.homePage.show();
-    });
+    Promise.all(promiseArr)
+      .then(([userData, levelData]) => {
+        const levels = levelData.result.data.sort((a, b) => a.index - b.index),
+          userInfo = userData.result;
+        this.gameModel.levels = levels;
+        this.gameModel.userInfo = userInfo;
+        const sum =
+          userInfo.scores.reduce((total, cur) => (total += cur.value), 0) | 0;
+        const count = 0;
+
+        // 更新用户的数据
+        wx.setUserCloudStorage({
+          KVDataList: [{ key: "sum", value: `${sum}+${count}` }],
+        });
+
+        // 显示 home 界面
+        this.gameView.homePage.show({
+          userInfo,
+          levels,
+          isLoadnig: false,
+        });
+      })
+      .catch(console.error);
   }
 
   initPages() {
@@ -91,6 +108,7 @@ class GameController {
           userInfo: this.gameModel.userInfo,
         }),
       showHelpPage: () => this.gameModel.setStage("help"),
+      showRankPage: () => this.gameModel.setStage("rank"),
     };
 
     const gameOverPageProps = {
@@ -166,6 +184,11 @@ class GameController {
       gotoHome: () => this.gameModel.setStage("home"),
     };
 
+    const rankPageProps = {
+      scene,
+      gotoHome: () => this.gameModel.setStage("home"),
+    };
+
     // 初始化 pages
     this.gameView.initGamePage(gamePageProps);
     this.gameView.initHomePage(homePageProps);
@@ -173,6 +196,7 @@ class GameController {
     this.gameView.initGridPage(gridPageProps);
     this.gameView.initLevelPage(levelPageProps);
     this.gameView.initHelpPage(helpPageProps);
+    this.gameView.initRankPage(rankPageProps);
 
     this.gameModel.setStage(initialStage);
     musicManager.enterGame.play();
@@ -193,8 +217,10 @@ class GameController {
       this.gameView.girdPage.handleTouchEnd(e);
     } else if (stage === "level") {
       this.gameView.levelPage.handleTouchEnd(e);
-    }else if(stage === "help"){
+    } else if (stage === "help") {
       this.gameView.helpPage.handleTouchEnd(e);
+    } else if (stage === "rank") {
+      this.gameView.rankPage.handleTouchEnd(e);
     }
   };
 

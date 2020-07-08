@@ -14,3 +14,4 @@ canvas.width = window.innerWidth * 2;
 GameGlobal.ImageBitmap = () => {};
 
 new Main();
+

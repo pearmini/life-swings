@@ -23,6 +23,7 @@ class GameModel {
 
   updateScore(data) {
     const { level, score } = data;
+    if(level < 0)return;
     const currentScore = this.userInfo.scores.find((d) => d.level === level);
     if (currentScore && currentScore.value > score) return;
     if (currentScore) {

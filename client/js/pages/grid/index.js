@@ -11,7 +11,7 @@ class GridPage extends Page {
     this.homeButton = new Rect("icons/home-fill-black.png", this.backHome);
     this.clearButton = new Rect("icons/clear.png", this.clear);
     this.rightButton = new Rect("icons/right-fill-black.png", this.goNext);
-    this.saveButton = new Rect("icons/save-fill.png");
+    this.saveButton = new Rect("icons/save-fill.png", this.save);
     this.helpButton = new Rect("icons/help-fill.png", this.help);
     this.backButton = new Rect("icons/clear.png", this.back);
     this.nextPageButton = new Rect("icons/right-fill-black.png", this.pageNext);
@@ -27,6 +27,7 @@ class GridPage extends Page {
       this.backButton,
       this.nextPageButton,
     ];
+    this.isInput = false;
     this.isHelp = false;
     this.nextLevel = nextLevel;
     this.gotoHome = gotoHome;
@@ -34,7 +35,12 @@ class GridPage extends Page {
     this.helpIndex = 0;
   }
 
+  addEventLisenter() {}
+
+  removeEventLisenter() {}
+
   backHome = () => {
+    this.removeEventLisenter();
     this.stop();
     this.gotoHome();
   };
@@ -96,6 +102,7 @@ class GridPage extends Page {
   };
 
   help = () => {
+    this.helpIndex = 0;
     this.isHelp = true;
     this.buttons.forEach((b) => (b.visible = false));
     this.backButton.visible = true;
@@ -111,12 +118,28 @@ class GridPage extends Page {
     this.renderGrids();
   };
 
+  save = () => {
+    this.isInput = true;
+    wx.showToast({
+      title: "请给该生命取个名字吧～",
+      icon: "none",
+    });
+    wx.showKeyboard({
+      defaultValue: "",
+      maxLength: 10,
+      multiple: false,
+      confirmHold: false,
+      confirmType: "done",
+    });
+  };
+
   pageNext = () => {
     this.helpIndex++;
     if (this.helpIndex >= 6) {
       this.renderGrids();
       this.helpIndex = 0;
     } else {
+      musicManager.page.play();
       this.renderHelp();
     }
   };
@@ -247,8 +270,9 @@ class GridPage extends Page {
 
     let content = [];
     if (this.helpIndex === 0) {
+      const l = this.canEdit ? `欢迎来到“经典模式”。` : "恭喜通过该关卡。";
       content = [
-        `欢迎来到“经典模式”。`,
+        l,
         "生命游戏中，每一个细胞有两种状态：存活或者死亡。黑色表示存活，白色代表死亡。",
         "每一个细胞下一刻的状态由自身的状态，以及以自身为中心的周围八格细胞决定。",
       ];
@@ -269,7 +293,9 @@ class GridPage extends Page {
         "当前细胞为死亡状态时，周围有3个存活细胞时，该细胞下一刻变成存活状态（模拟繁殖）。",
       ];
     } else if (this.helpIndex === 5) {
-      content = [`接下来请在“经典模式”，`, "展现创意，创建生命。"];
+      content = !this.canEdit
+        ? ["接下来请感受，", "创建和繁殖生命的奥妙。"]
+        : [`接下来请在“经典模式”，`, "展现创意，创建生命。"];
     }
     this.renderText(content);
     this.update();
@@ -336,6 +362,7 @@ class GridPage extends Page {
     this.ffButton.visible = false;
     this.touchArray = [];
     this.renderGrids();
+    this.addEventLisenter();
   };
 
   evolution() {
@@ -484,6 +511,12 @@ class GridPage extends Page {
     const { x, y } = this.getMousePosition(e);
 
     if (this.isMove) {
+      return;
+    }
+
+    if (this.isInput) {
+      wx.hideKeyboard();
+      this.isInput = false;
       return;
     }
 

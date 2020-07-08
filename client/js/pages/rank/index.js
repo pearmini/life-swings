@@ -1,32 +1,47 @@
 import Rect from "../../utils/rect";
 import Page from "../../utils/page";
 
-class MyPage extends Page {
+class RankPage extends Page {
   constructor({ scene, gotoHome }) {
     super(scene);
-    this.homeButton = new Rect("icons/home-fill.png", gotoHome);
+    this.homeButton = new Rect("icons/home-fill.png", this.back);
     this.rightButton = new Rect("icons/right-fill.png", this.nextPage);
     this.leftButton = new Rect("icons/left-fill.png", this.prePage);
-    this.buttons = [this.homeButton, this.rightButton, this.leftButton];
-    this.pageIndex = 0;
-    this.totalCnt = 3;
+    this.buttons = [this.homeButton, this.leftButton, this.rightButton];
+    this.gotoHome = gotoHome;
+
+    // 初始化和排行榜相关的东西
+    this.openDataContext = wx.getOpenDataContext();
+    this.openDataContext.postMessage({
+      type: "init",
+      payload: {
+        width: window.innerWidth * 2,
+        height: window.innerHeight * 2,
+      },
+    });
   }
 
-  nextPage = () => {
-    this.pageIndex++;
-    this.renderPage();
+  prePage = () => {
+    this.openDataContext.postMessage({
+      type: "pre",
+    });
+    this.scene.updateSharedCanvas();
   };
 
-  prePage = () => {
-    this.pageIndex--;
-    this.renderPage();
+  nextPage = () => {
+    this.openDataContext.postMessage({
+      type: "next",
+    });
+    this.scene.updateSharedCanvas();
+  };
+
+  back = () => {
+    this.scene.hideSharedCanvas();
+    this.gotoHome();
   };
 
   renderContent = () => {
-    if (this.pageIndex === 0) {
-    } else if (this.pageIndex === 1) {
-    } else if (this.pageIndex === 2) {
-    }
+    this.scene.showSharedCanvas();
   };
 
   renderPage = () => {
@@ -39,20 +54,20 @@ class MyPage extends Page {
     this.context.fillStyle = "rgba(0,0,0,0.3)";
     this.context.fillRect(0, 0, this.width, this.height);
 
+    //绘制 title
+    this.context.font = `bold 25px '微软雅黑'`;
+    this.context.fillStyle = "white";
+    this.context.textBaseline = "bottom";
+    this.context.textAlign = "left";
+    const title = "好友排行榜";
+    const titleWidth = this.context.measureText(title).width;
+    this.context.fillText(
+      title,
+      (this.width - titleWidth) / 2,
+      this.height * 0.2 - 15
+    );
 
-     //绘制 title
-     this.context.font = `bold 25px '微软雅黑'`;
-     this.context.fillStyle = "white";
-     this.context.textBaseline = "bottom";
-     this.context.textAlign = "left";
-     const title = "排行榜";
-     const titleWidth = this.context.measureText(title).width;
-     this.context.fillText(
-       title,
-       (this.width - titleWidth) / 2,
-       this.height * 0.2 - 15
-     );
-
+    // 绘制主要内容
     this.context.save();
     this.context.fillStyle = "#3d3b3f";
     this.context.translate(
@@ -63,6 +78,7 @@ class MyPage extends Page {
     this.renderContent();
     this.context.restore();
 
+    // 绘制按钮
     this.homeButton.set(this.width * 0.1, iconY, iconSize, iconSize);
     this.rightButton.set(
       this.width * 0.9 - iconSize,
@@ -76,22 +92,9 @@ class MyPage extends Page {
       iconSize,
       iconSize
     );
-
-    if (this.pageIndex > 0) {
-      this.leftButton.drawToCanvas(this.context, this.update);
-      this.leftButton.visible = true;
-    } else {
-      this.leftButton.visible = false;
-    }
-
-    if (this.pageIndex < this.totalCnt - 1) {
-      this.rightButton.drawToCanvas(this.context, this.update);
-      this.rightButton.visible = true;
-    } else {
-      this.rightButton.visible = false;
-    }
-
     this.homeButton.drawToCanvas(this.context, this.update);
+    this.rightButton.drawToCanvas(this.context, this.update);
+    this.leftButton.drawToCanvas(this.context, this.update);
   };
 
   render = (context, width, height, update) => {
@@ -114,4 +117,4 @@ class MyPage extends Page {
   };
 }
 
-export default MyPage;
+export default RankPage;

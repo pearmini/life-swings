@@ -1,5 +1,6 @@
 import Rect from "../../utils/rect";
 import Page from "../../utils/page";
+import musicManager from "../../utils/musicManager";
 
 class HelpPage extends Page {
   constructor({ scene, gotoHome }) {
@@ -14,11 +15,13 @@ class HelpPage extends Page {
   }
 
   nextPage = () => {
+    musicManager.page.play();
     this.pageIndex++;
     this.renderPage();
   };
 
   prePage = () => {
+    musicManager.page.play();
     this.pageIndex--;
     this.renderPage();
   };
@@ -53,7 +56,7 @@ class HelpPage extends Page {
   };
 
   renderHelp = (content, imageURL, ratio) => {
-    const lineHeight = 15;
+    const lineHeight = this.height < 600 ? 14 : 16;
     const padding = 20;
     const containerWidth = this.backgroundWidth - padding * 2;
     const lines = [];
@@ -78,14 +81,14 @@ class HelpPage extends Page {
       lines.push(s, " ");
     }
     lines.forEach((l, index) =>
-      this.context.fillText(l, padding, index * lineHeight * 1.2 + padding)
+      this.context.fillText(l, padding, index * lineHeight * 1.5 + padding)
     );
 
     // 绘制图片
     this.context.save();
     this.context.translate(-this.translateX, -this.translateY);
     const imageHeight =
-      this.backgroundHeight - padding * 2 - lines.length * lineHeight * 1.2;
+      this.backgroundHeight - padding * 2 - lines.length * lineHeight * 1.5;
     const imageWidth = imageHeight * ratio;
     const imageY = this.backgroundHeight - imageHeight - padding;
     const imageX = (this.backgroundWidth - imageWidth) / 2;
@@ -172,6 +175,7 @@ class HelpPage extends Page {
     this.height = height;
     this.context = context;
     this.update = update;
+    this.pageIndex = 0;
     this.renderPage();
   };
 
