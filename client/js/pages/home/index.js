@@ -7,9 +7,9 @@ class HomePage extends Page {
     startGame,
     showGridPage,
     showLevelPage,
-    showMyPage,
     showRankPage,
     showHelpPage,
+    showMyPage,
     isLoading = true,
   }) {
     super(scene);
@@ -26,6 +26,7 @@ class HomePage extends Page {
       this.levelButton,
       this.rankButton,
       this.helpButton,
+      this.myButton,
     ];
     this.isLoading = isLoading;
     this.loadingTimer = null;

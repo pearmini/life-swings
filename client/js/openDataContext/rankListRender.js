@@ -10,7 +10,7 @@ class RankListRender {
     const { width, height } = payload;
     this.width = width;
     this.height = height;
-    // this.renderData();
+    this.renderData();
   }
 
   renderData = () => {
@@ -41,8 +41,8 @@ class RankListRender {
     );
     const cardWidth = this.width * 0.8,
       cardHeight = this.height * 0.6;
-    const padding = 0;
-    const margin = 30;
+    const padding = 20;
+    const margin = 40;
     const translateX = (this.width - cardWidth) / 2;
     const translateY = (this.height - cardHeight) / 2;
     const gridHeight = (cardHeight - padding * 2 - margin) / this.pageCount;

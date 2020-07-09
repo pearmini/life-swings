@@ -74,7 +74,7 @@ class LevelPage extends Page {
         20
       );
 
-      this.renderGrids(this.wrapper(d.data), cardHeight);
+      this.renderGrids(this.wrapper(d.data));
 
       const playButton = new Rect("icons/play.png", () =>
         this.startGame(d.index)
@@ -197,6 +197,7 @@ class LevelPage extends Page {
   };
 
   renderPage = () => {
+    this.playButtons = [];
     const iconSize = this.width * 0.1;
     const iconY = this.height * 0.8 + iconSize / 2;
     this.context.clearRect(0, 0, this.width, this.height);

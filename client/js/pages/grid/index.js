@@ -3,7 +3,7 @@ import Page from "../../utils/page";
 import musicManager from "../../utils/musicManager";
 
 class GridPage extends Page {
-  constructor({ scene, gotoHome, nextLevel }) {
+  constructor({ scene, gotoHome, nextLevel, addLife, updateLife }) {
     super(scene);
     this.playButton = new Rect("icons/play.png", this.play);
     this.ffButton = new Rect("icons/ff.png", this.ff);
@@ -27,17 +27,63 @@ class GridPage extends Page {
       this.backButton,
       this.nextPageButton,
     ];
-    this.isInput = false;
-    this.isHelp = false;
     this.nextLevel = nextLevel;
     this.gotoHome = gotoHome;
+    this.addLife = addLife;
+    this.updateLife = updateLife;
     this.speed = 1000;
     this.helpIndex = 0;
+    this.inputMsg = "";
   }
 
-  addEventLisenter() {}
+  addEventLisenter() {
+    wx.onKeyboardConfirm(this.handleKeyboardConfirm);
+  }
 
-  removeEventLisenter() {}
+  removeEventLisenter() {
+    wx.offKeyboardConfirm(this.handleKeyboardConfirm);
+  }
+
+  handleKeyboardConfirm = ({ value }) => {
+    if (value === "") {
+      wx.showToast({
+        title: "名字不能为空～",
+        icon: "none",
+      });
+      return;
+    }
+
+    if (value.length > 20) {
+      wx.showToast({
+        title: "名字不能超过20个字符",
+        icon: "none",
+      });
+      return;
+    }
+
+    this.addLife({
+      name: value,
+      data: this.getData(),
+    });
+    this.isInput = false;
+    wx.hideKeyboard();
+  };
+
+  getData = () => {
+    const data = [];
+    let minI = Infinity,
+      minJ = Infinity;
+    for (let i = 0; i < this.grids[0].length; i++) {
+      for (let j = 0; j < this.grids[i].length; j++) {
+        if (this.grids[i][j]) {
+          data.push([i, j]);
+          minI = Math.min(i, minI);
+          minJ = Math.min(j, minJ);
+        }
+      }
+    }
+    return data.map(([i, j]) => [i - minI, j - minJ]);
+  };
 
   backHome = () => {
     this.removeEventLisenter();
@@ -119,19 +165,42 @@ class GridPage extends Page {
   };
 
   save = () => {
-    this.isInput = true;
-    wx.showToast({
-      title: "请给该生命取个名字吧～",
-      icon: "none",
-    });
-    wx.showKeyboard({
-      defaultValue: "",
-      maxLength: 10,
-      multiple: false,
-      confirmHold: false,
-      confirmType: "done",
-    });
+    if (this.isEmpty()) {
+      wx.showToast({
+        icon: "none",
+        title: "细胞不能为空～",
+      });
+      return;
+    }
+
+    if (!this.isEdit) {
+      this.isInput = true;
+      wx.showToast({
+        title: "请给该生命取个名字吧～",
+        icon: "none",
+      });
+      wx.showKeyboard({
+        defaultValue: "",
+        maxLength: 20,
+        multiple: false,
+        confirmHold: true,
+        confirmType: "done",
+      });
+    } else {
+      this.updateLife({ id: this.id, data: this.getData() });
+    }
   };
+
+  isEmpty() {
+    for (let i = 0; i < this.grids[0].length; i++) {
+      for (let j = 0; j < this.grids[i].length; j++) {
+        if (this.grids[i][j]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
   pageNext = () => {
     this.helpIndex++;
@@ -338,7 +407,7 @@ class GridPage extends Page {
   }
 
   render = (context, width, height, update, data, canvas) => {
-    const { cells = [[]], canEdit = true, level, rule, name } = data || {};
+    const { cells = [[]], canEdit = true, level, rule, name, id } = data || {};
     this.level = level;
     this.cells = cells;
     this.rule = rule;
@@ -357,10 +426,13 @@ class GridPage extends Page {
     this.offsetY = 0;
     this.isPlaying = false;
     this.isFast = false;
+    this.isInput = false;
+    this.isHelp = false;
+    this.id = id;
+    this.isEdit = name && canEdit;
     this.playButton.visible = true;
     this.stopButton.visible = false;
     this.ffButton.visible = false;
-    this.touchArray = [];
     this.renderGrids();
     this.addEventLisenter();
   };

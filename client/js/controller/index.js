@@ -25,6 +25,8 @@ class GameController {
       this.gameView.showHelpPage(data);
     } else if (stage === "rank") {
       this.gameView.showRankPage(data);
+    } else if (stage === "my") {
+      this.gameView.showMyPage(data);
     }
   };
 
@@ -32,17 +34,24 @@ class GameController {
     const promiseArr = [
       this.gameModel.getUserInfo(),
       this.gameModel.getLevels(),
+      this.gameModel.getLives(),
     ];
 
     Promise.all(promiseArr)
-      .then(([userData, levelData]) => {
+      .then(([userData, levelData, livesData]) => {
         const levels = levelData.result.data.sort((a, b) => a.index - b.index),
-          userInfo = userData.result;
+          userInfo = userData.result,
+          lives = livesData.result.data;
         this.gameModel.levels = levels;
         this.gameModel.userInfo = userInfo;
+        this.gameModel.lives = lives.map((d) => ({
+          ...d,
+          data: this.gameModel.generateCells(d.data),
+        }));
+
         const sum =
           userInfo.scores.reduce((total, cur) => (total += cur.value), 0) | 0;
-        const count = 0;
+        const count = lives.length;
 
         // 更新用户的数据
         wx.setUserCloudStorage({
@@ -109,6 +118,7 @@ class GameController {
         }),
       showHelpPage: () => this.gameModel.setStage("help"),
       showRankPage: () => this.gameModel.setStage("rank"),
+      showMyPage: () => this.gameModel.setStage("my", this.gameModel.lives),
     };
 
     const gameOverPageProps = {
@@ -148,6 +158,14 @@ class GameController {
             name,
           });
         }
+      },
+      addLife: (data) => {
+        this.gameModel.add(data);
+      },
+      updateLife: (data) => {
+        this.gameModel.update(data.id, {
+          data: data.data,
+        });
       },
     };
 
@@ -189,6 +207,23 @@ class GameController {
       gotoHome: () => this.gameModel.setStage("home"),
     };
 
+    const myPageProps = {
+      scene,
+      gotoHome: () => this.gameModel.setStage("home"),
+      removeLife: (d) => this.gameModel.remove(d),
+      updateLife: (id, data) => this.gameModel.update(id, data),
+      showGrid: (d) => {
+        const data = {
+          canEdit: true,
+          cells: d.data,
+          rule: d.rule,
+          name: d.name,
+          id: d._id,
+        };
+        this.gameModel.setStage("grid", data);
+      },
+    };
+
     // 初始化 pages
     this.gameView.initGamePage(gamePageProps);
     this.gameView.initHomePage(homePageProps);
@@ -197,6 +232,7 @@ class GameController {
     this.gameView.initLevelPage(levelPageProps);
     this.gameView.initHelpPage(helpPageProps);
     this.gameView.initRankPage(rankPageProps);
+    this.gameView.initMyPage(myPageProps);
 
     this.gameModel.setStage(initialStage);
     musicManager.enterGame.play();
@@ -221,6 +257,8 @@ class GameController {
       this.gameView.helpPage.handleTouchEnd(e);
     } else if (stage === "rank") {
       this.gameView.rankPage.handleTouchEnd(e);
+    } else if (stage === "my") {
+      this.gameView.myPage.handleTouchEnd(e);
     }
   };
 

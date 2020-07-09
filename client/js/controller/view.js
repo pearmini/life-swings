@@ -5,6 +5,7 @@ import GameOverPage from "../pages/over/index";
 import LevelPage from "../pages/level/index";
 import HelpPage from "../pages/help/index";
 import RankPage from "../pages/rank/index";
+import MyPage from "../pages/my/index";
 
 class GameView {
   constructor() {}
@@ -41,6 +42,10 @@ class GameView {
     this.rankPage.show(data);
   }
 
+  showMyPage(data) {
+    this.myPage.show(data);
+  }
+
   initGamePage(props) {
     this.gamePage = new GamePage(props);
   }
@@ -67,6 +72,10 @@ class GameView {
 
   initRankPage(props) {
     this.rankPage = new RankPage(props);
+  }
+
+  initMyPage(props) {
+    this.myPage = new MyPage(props);
   }
 }
 
