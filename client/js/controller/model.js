@@ -23,7 +23,7 @@ class GameModel {
 
   updateScore(data) {
     const { level, score } = data;
-    if(level < 0)return;
+    if (level < 0) return;
     const currentScore = this.userInfo.scores.find((d) => d.level === level);
     if (currentScore && currentScore.value > score) return;
     if (currentScore) {
@@ -36,6 +36,13 @@ class GameModel {
   }
 
   uploadScore(scores) {
+    // 更新微信服务器数据
+    const sum = scores.reduce((total, cur) => (total += cur.value), 0) | 0;
+    wx.setUserCloudStorage({
+      KVDataList: [{ key: "sum", value: `${sum}+${0}` }],
+    });
+
+    // 更新云端数据
     return wx.cloud.callFunction({
       name: "uploadScore",
       data: {

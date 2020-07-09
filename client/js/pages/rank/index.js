@@ -12,6 +12,7 @@ class RankPage extends Page {
 
     // 初始化和排行榜相关的东西
     this.openDataContext = wx.getOpenDataContext();
+    this.delayTime = 700;
     this.openDataContext.postMessage({
       type: "init",
       payload: {
@@ -25,14 +26,18 @@ class RankPage extends Page {
     this.openDataContext.postMessage({
       type: "pre",
     });
-    this.scene.updateSharedCanvas();
+    setTimeout(() => {
+      this.scene.updateSharedCanvas();
+    }, 500);
   };
 
   nextPage = () => {
     this.openDataContext.postMessage({
       type: "next",
     });
-    this.scene.updateSharedCanvas();
+    setTimeout(() => {
+      this.scene.updateSharedCanvas();
+    }, this.delayTime);
   };
 
   back = () => {
@@ -41,7 +46,13 @@ class RankPage extends Page {
   };
 
   renderContent = () => {
-    this.scene.showSharedCanvas();
+    this.openDataContext.postMessage({
+      type: "refresh",
+    });
+    setTimeout(() => {
+      this.scene.updateSharedCanvas();
+      this.scene.showSharedCanvas();
+    }, this.delayTime);
   };
 
   renderPage = () => {
