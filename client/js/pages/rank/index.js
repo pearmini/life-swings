@@ -12,7 +12,7 @@ class RankPage extends Page {
 
     // 初始化和排行榜相关的东西
     this.openDataContext = wx.getOpenDataContext();
-    this.delayTime = 700;
+    this.delayTime = 0;
     this.openDataContext.postMessage({
       type: "init",
       payload: {

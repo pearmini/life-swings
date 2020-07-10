@@ -7,6 +7,7 @@ class MyPage extends Page {
     this.homeButton = new Rect("icons/home-fill.png", this.back);
     this.rightButton = new Rect("icons/right-fill.png", this.nextPage);
     this.leftButton = new Rect("icons/left-fill.png", this.prePage);
+    this.empty = new Rect("images/empty.png");
     this.buttons = [this.homeButton, this.rightButton, this.leftButton];
     this.pageIndex = 0;
     this.pageCount = 3;
@@ -75,6 +76,30 @@ class MyPage extends Page {
       this.pageIndex * this.pageCount,
       (this.pageIndex + 1) * this.pageCount
     );
+
+    if (lives.length === 0) {
+      // 绘制图片
+      const emptyWidth = 100;
+      const emptyHeight = (emptyWidth / 184) * 152;
+      this.empty.set(
+        (this.width - emptyWidth) / 2,
+        (this.height - emptyHeight) / 2 - 20,
+        emptyWidth,
+        emptyHeight
+      );
+      this.empty.drawToCanvas(this.context, this.update);
+
+      // 绘制文字
+      this.context.font = "normal 15px sans-serif";
+      this.context.fillStyle = "white";
+      this.context.textAlign = "center";
+      this.context.fillText(
+        "还没有生命～",
+        this.width / 2,
+        this.height / 2 + emptyHeight / 2 + 10
+      );
+      return;
+    }
 
     const padding = 0;
     const margin = 30;
@@ -145,7 +170,6 @@ class MyPage extends Page {
         iconSize
       );
       removeButton.drawToCanvas(this.context, this.upadte);
-
       this.extraButtons.push(eyeButton, editButton, removeButton);
     });
   };

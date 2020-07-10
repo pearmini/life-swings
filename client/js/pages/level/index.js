@@ -8,6 +8,7 @@ class LevelPage extends Page {
     this.homeButton = new Rect("icons/home-fill.png", gotoHome);
     this.rightButton = new Rect("icons/right-fill.png", this.nextPage);
     this.leftButton = new Rect("icons/left-fill.png", this.prePage);
+    this.lockImage = new Rect("icons/lock-fill.png");
     this.buttons = [this.homeButton, this.rightButton, this.leftButton];
     this.playButtons = [];
     this.page = 0;
@@ -74,7 +75,9 @@ class LevelPage extends Page {
         20
       );
 
-      this.renderGrids(this.wrapper(d.data));
+      if (canPlay) {
+        this.renderGrids(this.wrapper(d.data));
+      }
 
       const playButton = new Rect("icons/play.png", () =>
         this.startGame(d.index)
@@ -97,6 +100,7 @@ class LevelPage extends Page {
       playButton.drawToCanvas(this.context, this.update);
 
       if (!canPlay) {
+        // 绘制文字
         playButton.visible = false;
         this.context.font = "bold 20px '微软雅黑'";
         this.context.fillStyle = "white";
@@ -106,6 +110,19 @@ class LevelPage extends Page {
           tx + cardInnerWidth - 40,
           ty + i * cardHeight + cardHeight / 2 + this.cardPadding / 2
         );
+
+        // 绘制 lock 图片
+        const lockSize = this.cardInnerHeight * 0.7;
+        const lockX = tx + this.cardPadding + this.width * 0.12,
+          lockY =
+            ty +
+            i * cardHeight +
+            (cardHeight - lockSize) / 2 +
+            this.cardPadding / 2;
+        this.context.fillStyle = "#b1b2b3";
+        this.context.fillRect(lockX, lockY, lockSize, lockSize);
+        this.lockImage.set(lockX, lockY, lockSize, lockSize);
+        this.lockImage.drawToCanvas(this.context, this.update);
       } else {
         playButton.visible = true;
         if (score && score.value === 1) {

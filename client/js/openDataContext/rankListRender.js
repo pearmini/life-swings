@@ -4,6 +4,8 @@ class RankListRender {
     this.context = this.sharedCanvas.getContext("2d");
     this.data = [];
     this.pageCount = 8;
+    this.imageByOpenid = {};
+    this.isLoadImage = false;
   }
 
   init(payload) {
@@ -13,25 +15,51 @@ class RankListRender {
     this.renderData();
   }
 
-  renderData = () => {
+  renderData() {
     wx.getFriendCloudStorage({
       keyList: ["sum"],
       success: (res) => {
+        const loadImage = (d) => {
+          const img = wx.createImage();
+          img.src = d.avatarUrl;
+          this.imageByOpenid[d.openid] = img;
+          img.onload = () => {};
+        };
         this.data = res.data;
         this.pageIndex = 0;
         this.data.sort((a, b) => {
-          const sum = (d) => d.split("+")[0];
-          return sum(a) - sum(b);
+          const sum = (d) => d.KVDataList[0].value.split("+")[0];
+          return sum(b) - sum(a);
         });
-        // const item = this.data[0];
-        // for (let i = 0; i < 10; i++) {
-        //   this.data.push(item);
-        // }
-        this.totalCount = Math.ceil(this.data.length / this.pageCount);
-        this.render();
+
+        // 先将图片获取一次
+        if (!this.isLoadImage) {
+          this.data.forEach(loadImage);
+          this.isLoadImage = true;
+          this.totalCount = Math.ceil(this.data.length / this.pageCount);
+          setTimeout(() => {
+            this.render();
+          }, 1000);
+        } else {
+          // 只渲染有图片的用户
+          this.data = this.data.filter((d) => this.imageByOpenid[d.openid]);
+          this.totalCount = Math.ceil(this.data.length / this.pageCount);
+          this.render();
+
+          // 没有图片的用户延迟渲染
+          const newData = this.data.filter(
+            (d) => this.imageByOpenid[d.openid] === undefined
+          );
+          newData.forEach(loadImage);
+          if (newData.length) {
+            setTimeout(() => {
+              this.render();
+            }, 1000);
+          }
+        }
       },
     });
-  };
+  }
 
   render = () => {
     this.context.clearRect(0, 0, this.width, this.height);
@@ -82,16 +110,14 @@ class RankListRender {
       );
 
       // 头像
-      const img = wx.createImage();
-      img.src = d.avatarUrl;
-      img.onload = () =>
-        this.context.drawImage(
-          img,
-          translateX + girdWidth + padding,
-          translateY + index * gridHeight + gridPadding + margin,
-          gridHeight - gridPadding * 2,
-          gridHeight - gridPadding * 2
-        );
+      const img = this.imageByOpenid[d.openid];
+      this.context.drawImage(
+        img,
+        translateX + girdWidth + padding,
+        translateY + index * gridHeight + gridPadding + margin,
+        gridHeight - gridPadding * 2,
+        gridHeight - gridPadding * 2
+      );
 
       // 名字
       this.context.fillText(

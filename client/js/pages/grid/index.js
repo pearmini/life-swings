@@ -46,17 +46,20 @@ class GridPage extends Page {
 
   handleKeyboardConfirm = ({ value }) => {
     if (value === "") {
-      wx.showToast({
+      this.showToast({
         title: "名字不能为空～",
-        icon: "none",
+        type: "f",
+        success: () => this.renderGrids(),
       });
       return;
     }
 
     if (value.length > 20) {
-      wx.showToast({
+      this.showToast({
         title: "名字不能超过20个字符",
         icon: "none",
+        type: "f",
+        success: () => this.renderGrids(),
       });
       return;
     }
@@ -166,18 +169,21 @@ class GridPage extends Page {
 
   save = () => {
     if (this.isEmpty()) {
-      wx.showToast({
-        icon: "none",
+      this.showToast({
         title: "细胞不能为空～",
+        type: "f",
+        success: () => this.renderGrids(),
       });
       return;
     }
 
     if (!this.isEdit) {
       this.isInput = true;
-      wx.showToast({
+      this.showToast({
         title: "请给该生命取个名字吧～",
-        icon: "none",
+        type: "i",
+        success: () => this.renderGrids(),
+        duration: 2000,
       });
       wx.showKeyboard({
         defaultValue: "",
@@ -364,7 +370,7 @@ class GridPage extends Page {
     } else if (this.helpIndex === 5) {
       content = !this.canEdit
         ? ["接下来请感受，", "创建和繁殖生命的奥妙。"]
-        : [`接下来请在“经典模式”，`, "展现创意，创建生命。"];
+        : [`接下来请在“经典模式”，`, "发挥创意，创造生命。"];
     }
     this.renderText(content);
     this.update();
