@@ -164,6 +164,7 @@ class GridPage extends Page {
     this.buttons.forEach((b) => (b.visible = true));
     this.backButton.visible = false;
     this.nextPageButton.visible = false;
+    this.helpIndex = 0;
     this.renderGrids();
   };
 
@@ -211,8 +212,7 @@ class GridPage extends Page {
   pageNext = () => {
     this.helpIndex++;
     if (this.helpIndex >= 6) {
-      this.renderGrids();
-      this.helpIndex = 0;
+      this.back();
     } else {
       musicManager.page.play();
       this.renderHelp();
@@ -527,8 +527,24 @@ class GridPage extends Page {
   }
 
   handleTouchMove(e) {
-    this.isMove = true;
     const { touches } = e;
+
+    // 判断是否移动
+    for (let curTouch of touches) {
+      const preTouch = this.preTouches.find(
+        (d) => d.identifier === curTouch.identifier
+      );
+      const diffX = curTouch.pageX - preTouch.pageX;
+      const diffY = curTouch.pageY - preTouch.pageY;
+
+      if(diffX !==0 && diffY !==0){
+        this.isMove = true;
+      }
+    }
+    if(!this.isMove){
+      this.preTouches = touches;
+      return;
+    }
 
     // 处理缩放
     if (touches.length === 2) {
@@ -558,6 +574,7 @@ class GridPage extends Page {
       );
       const diffX = curTouch.pageX - preTouch.pageX;
       const diffY = curTouch.pageY - preTouch.pageY;
+
       this.offsetX += diffX;
       this.offsetY += diffY;
 
@@ -580,7 +597,6 @@ class GridPage extends Page {
         this.offsetY
       );
     }
-
     this.preTouches = touches;
     this.renderGrids();
   }
