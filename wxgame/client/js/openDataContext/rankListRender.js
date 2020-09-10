@@ -95,11 +95,12 @@ class RankListRender {
 
     data.forEach((d, index) => {
       const scores = d.KVDataList[0].value.split("+");
+      const name = (d) => (d.length > 4 ? d.slice(0, 4) + "..." : d);
 
       // 设置
       this.context.textBaseline = "middle";
       this.context.textAlign = "center";
-      this.context.font = "normal 35px sans-serif";
+      this.context.font = "normal 30px sans-serif";
       this.context.fillStyle = "white";
 
       // 排行
@@ -121,7 +122,7 @@ class RankListRender {
 
       // 名字
       this.context.fillText(
-        d.nickname,
+        name(d.nickname),
         translateX + girdWidth * 2 + girdWidth / 2 + padding,
         translateY + index * gridHeight + gridHeight / 2 + margin
       );
