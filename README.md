@@ -16,7 +16,7 @@ Life-swings is a 3D WeChat game that combines "Building a House" and "Game of Li
 
 *Game of Life* is a kind of cellular motivation. Players place some cells in a dead or dead state on a two-dimensional plane. The state of each cell at the next moment is determined by the state of nearby cells in accordance with certain rules. The charm of the life game is that the simple initial state and rules can be evolved to produce complex and wonderful graphics, **life is born on the edge of chaos.**
 
-<img src="./screenshots/cover.jpg" height="300px">&emsp;<img src="./screenshots/pass_mode.png" height="300px">&emsp;<img src="./screenshots/classic_mode.png" height="300px">
+<img src="./screenshots/cover.jpg" height="400px">&emsp;<img src="./screenshots/pass_mode.png" height="400px">&emsp;<img src="./screenshots/classic_mode.png" height="400px">
 
 ## Why is it
 
