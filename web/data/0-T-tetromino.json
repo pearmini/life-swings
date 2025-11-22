@@ -1,0 +1,9 @@
+{
+ "index" : 0,
+ "dimensions" : [3,3],
+ "data" : [[1,1,1],
+		   [0,1,0],
+		   [0,0,0]],
+ "rule" : {"born":[3],"survive":[2,3]},
+ "name" : "T-tetromino"
+}
