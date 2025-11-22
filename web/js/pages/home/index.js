@@ -7,7 +7,6 @@ class HomePage extends Page {
     startGame,
     showGridPage,
     showLevelPage,
-    showRankPage,
     showHelpPage,
     showMyPage,
     isLoading = true,
@@ -16,7 +15,6 @@ class HomePage extends Page {
     this.title = new Rect("images/title.png");
     this.classicTitle = new Rect("images/classic.png", showGridPage);
     this.startButton = new Rect("images/play.png", startGame);
-    this.rankButton = new Rect("icons/rank.png", showRankPage);
     this.myButton = new Rect("icons/my.png", showMyPage);
     this.levelButton = new Rect("icons/level.png", showLevelPage);
     this.helpButton = new Rect("icons/help.png", showHelpPage);
@@ -24,7 +22,6 @@ class HomePage extends Page {
       this.startButton,
       this.classicTitle,
       this.levelButton,
-      this.rankButton,
       this.helpButton,
       this.myButton,
     ];
@@ -131,15 +128,9 @@ class HomePage extends Page {
       const iconWidth = height * 0.2 * 0.3;
       const iconHeight = (iconWidth * 763) / 507;
       const iconY = height * 0.8 + (height * 0.2 - iconHeight) / 2,
-        padding = 0.26;
+        padding = 0.15;
       this.levelButton.set(
         (width - iconWidth) / 2 - width * padding,
-        iconY,
-        iconWidth,
-        iconHeight
-      );
-      this.rankButton.set(
-        (width - iconWidth) / 2,
         iconY,
         iconWidth,
         iconHeight
@@ -151,7 +142,6 @@ class HomePage extends Page {
         iconHeight
       );
       this.levelButton.drawToCanvas(context, update);
-      this.rankButton.drawToCanvas(context, update);
       this.myButton.drawToCanvas(context, update);
     }
   };

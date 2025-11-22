@@ -114,7 +114,6 @@ class GameController {
           userInfo: this.gameModel.userInfo,
         }),
       showHelpPage: () => this.gameModel.setStage("help"),
-      showRankPage: () => this.gameModel.setStage("rank"),
       showMyPage: () => this.gameModel.setStage("my", this.gameModel.lives),
     };
 
