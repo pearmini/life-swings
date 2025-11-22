@@ -2,7 +2,7 @@
 
 > 2020 WeChat Mini-Game Competition National Third Prize！🌱
 
-Swings of Life is a 3D web game that combines [Tower Builder](https://play.google.com/store/apps/details?id=com.tefoli.phonglinhstudio.towerbuilder&hl=en_US) and [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), powered by [Three.js](https://threejs.org/).
+Swings of Life is a [3D web game](https://swings.bairui.dev/) that combines [Tower Builder](https://play.google.com/store/apps/details?id=com.tefoli.phonglinhstudio.towerbuilder&hl=en_US) and [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), powered by [Three.js](https://threejs.org/).
 
 _Tower Builder_ is a game in which the player operates a hoist that continuously performs a single pendulum movement, and releases the suspended floors at the right moment. The fallen floors are stacked one after another. The higher the pile, the higher the score.
 
