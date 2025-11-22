@@ -16,13 +16,13 @@ Life-swings is a 3D WeChat game that combines "Building a House" and "Game of Li
 
 *Game of Life* is a kind of cellular motivation. Players place some cells in a dead or dead state on a two-dimensional plane. The state of each cell at the next moment is determined by the state of nearby cells in accordance with certain rules. The charm of the life game is that the simple initial state and rules can be evolved to produce complex and wonderful graphics, **life is born on the edge of chaos.**
 
-<img src="./screenshots/cover.jpg" height="400px">&emsp;<img src="./screenshots/pass_mode.png" height="400px">&emsp;<img src="./screenshots/classic_mode.png" height="400px">
+ <img src="./img/cover.jpg" height="400px">&emsp;<img src="./img/pass_mode.png" height="400px">&emsp;<img src="./img/classic_mode.png" height="400px">
 
 ## Why is it
 
 On the one hand, this game is to cherish the memory of the British mathematician [John Horton Conway](https://nl.wikipedia.org/wiki/John_Horton), who died due to the epidemic. We hopes that after the epidemic, everything grows.
 
-<img src="./screenshots/people.jpg" width="300px">
+ <img src="./img/people.jpg" width="300px">
 
 On the other hand, we hope that users will experience the swinging creation of life and the process of its reproduction so that more people can learn about life games and experience the fun of creation.
 
@@ -46,13 +46,13 @@ The color of the energy block, the pendulum's speed, and the size of the cell wi
 
 When all cells have energy, they can begin to evolve. Players can observe how these simple cells evolve into complex and beautiful patterns.
 
-<img src="./screenshots/pass_mode.gif" width="200px">
+ <img src="./img/pass_mode.gif" width="200px">
 
 ### Classic mode
 
 After the player has learned the mystery of the proliferation of life games through the pass-through mode, they can go to the classic mode to easily modify the cell state by clicking on the checkerboard and experience the fun of creating life from start to end.
 
-<img src="./screenshots/classic_mode.gif" width="200px">
+ <img src="./img/classic_mode.gif" width="200px">
 
 ## Future works
 
