@@ -9,8 +9,10 @@ class Canvas extends Sprite {
     // 设置 canvas
     this.isSharedCanvas = isSharedCanvas;
     this.canvas = canvas;
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    // Use container dimensions (iPhone XR: 414x896) or window size if smaller
+    const container = document.getElementById('gameContainer');
+    this.width = container ? container.clientWidth : Math.min(414, window.innerWidth);
+    this.height = container ? container.clientHeight : Math.min(896, window.innerHeight);
     this.canvas.width = this.width * 2;
     this.canvas.height = this.height * 2;
 

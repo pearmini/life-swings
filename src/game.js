@@ -8,10 +8,15 @@ import Main from "./js/main.js";
 
 // Get canvas element
 const canvas = document.getElementById('gameCanvas');
+const container = document.getElementById('gameContainer');
+
+// Get container dimensions (iPhone XR size: 414x896 from CSS, or actual size if smaller)
+const containerWidth = container.clientWidth || Math.min(414, window.innerWidth);
+const containerHeight = container.clientHeight || Math.min(896, window.innerHeight);
 
 // Prevent blur on high-resolution screens
-canvas.height = window.innerHeight * 2;
-canvas.width = window.innerWidth * 2;
+canvas.height = containerHeight * 2;
+canvas.width = containerWidth * 2;
 
 // Set up global canvas reference
 window.canvas = canvas;

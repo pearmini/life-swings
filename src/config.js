@@ -1,5 +1,31 @@
+// iPhone XR dimensions: 414x896
+const IPHONE_XR_WIDTH = 414;
+const IPHONE_XR_HEIGHT = 896;
+
+// Get container dimensions (iPhone XR size) or window size if smaller
+const getContainerSize = () => {
+  if (typeof window === 'undefined') {
+    return { width: IPHONE_XR_WIDTH, height: IPHONE_XR_HEIGHT };
+  }
+  
+  const container = document.getElementById('gameContainer');
+  if (container && container.clientWidth > 0) {
+    return {
+      width: container.clientWidth,
+      height: container.clientHeight
+    };
+  }
+  // Fallback to iPhone XR size or window size if smaller
+  return {
+    width: Math.min(IPHONE_XR_WIDTH, window.innerWidth),
+    height: Math.min(IPHONE_XR_HEIGHT, window.innerHeight)
+  };
+};
+
+const containerSize = getContainerSize();
+
 export const globalConfig = {
-  aspect: window.innerHeight / window.innerWidth,
+  aspect: containerSize.height / containerSize.width,
 };
 
 export const sceneConfig = {
