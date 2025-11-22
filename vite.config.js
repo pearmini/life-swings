@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import threeGlobalPlugin from './vite-plugin-three.js';
 
 export default defineConfig({
-  root: 'src',
+  root: '.',
   publicDir: 'public',
   plugins: [threeGlobalPlugin()],
   server: {
@@ -16,11 +16,11 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: '../dist',
+    outDir: 'dist',
     assetsDir: 'assets',
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'src/index.html')
+        main: resolve(__dirname, 'index.html')
       }
     }
   }
