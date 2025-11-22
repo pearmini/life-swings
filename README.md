@@ -1,6 +1,8 @@
 # Swings of Life
 
-Swings of Life is a 3D WeChat game that combines [Tower Builder](https://play.google.com/store/apps/details?id=com.tefoli.phonglinhstudio.towerbuilder&hl=en_US) and [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), powered by [Three.js](https://threejs.org/).
+> 2020 WeChat Mini-Game Competition National Third Prize！🌱
+
+Swings of Life is a 3D web game that combines [Tower Builder](https://play.google.com/store/apps/details?id=com.tefoli.phonglinhstudio.towerbuilder&hl=en_US) and [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), powered by [Three.js](https://threejs.org/).
 
 _Tower Builder_ is a game in which the player operates a hoist that continuously performs a single pendulum movement, and releases the suspended floors at the right moment. The fallen floors are stacked one after another. The higher the pile, the higher the score.
 
@@ -43,3 +45,11 @@ When all cells have energy, they can begin to evolve. Players can observe how th
 After the player has learned the mystery of the proliferation of life games through the pass-through mode, they can go to the classic mode to easily modify the cell state by clicking on the checkerboard and experience the fun of creating life from start to end.
 
  <img src="./img/classic_mode.gif" width="200px">
+
+## Archive
+
+Please refer to [v1 branch](https://github.com/pearmini/life-swings/tree/v1) for WeChat Mini-Game version.
+
+## License
+
+MIT
