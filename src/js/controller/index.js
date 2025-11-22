@@ -8,6 +8,10 @@ class GameController {
     this.gameModel = gameModel;
     this.gameView = gameView;
     this.gameModel.stageChanged.attach(this.switchPage);
+    // Track touch events to prevent double-firing from mouse events
+    this.lastTouchEndTime = 0;
+    this.lastTouchStartTime = 0;
+    this.touchEventHandled = false;
   }
 
   switchPage = (_, { stage, data }) => {
@@ -262,6 +266,10 @@ class GameController {
 
     // 设置事件监听 - Touch events
     canvas.addEventListener("touchstart", (e) => {
+      // Mark that we've handled a touch event
+      this.lastTouchStartTime = Date.now();
+      this.touchEventHandled = true;
+      
       // Convert web touch event to expected format
       const touchEvent = {
         touches: Array.from(e.touches || []).map(t => ({
@@ -292,6 +300,10 @@ class GameController {
       this.handleTouchStart(touchEvent);
     });
     canvas.addEventListener("touchend", (e) => {
+      // Mark that we've handled a touch event
+      this.lastTouchEndTime = Date.now();
+      this.touchEventHandled = true;
+      
       const touchEvent = {
         touches: Array.from(e.touches || []).map(t => ({
           clientX: t.clientX,
@@ -319,6 +331,11 @@ class GameController {
         stopPropagation: () => e.stopPropagation()
       };
       this.handleTouchEnd(touchEvent);
+      
+      // Reset flag after a delay to allow genuine mouse events
+      setTimeout(() => {
+        this.touchEventHandled = false;
+      }, 300);
     });
     canvas.addEventListener("touchmove", (e) => {
       const touchEvent = {
@@ -352,12 +369,20 @@ class GameController {
 
     // Add mouse event listeners for desktop support
     canvas.addEventListener("mousedown", (e) => {
+      // Ignore mouse events that happen right after touch events (mobile browsers simulate mouse events)
+      if (this.touchEventHandled || (Date.now() - this.lastTouchStartTime < 300)) {
+        return;
+      }
       e.preventDefault();
       const touchEvent = createTouchEventFromMouse("touchstart", e);
       this.handleTouchStart(touchEvent);
     });
 
     canvas.addEventListener("mouseup", (e) => {
+      // Ignore mouse events that happen right after touch events (mobile browsers simulate mouse events)
+      if (this.touchEventHandled || (Date.now() - this.lastTouchEndTime < 300)) {
+        return;
+      }
       e.preventDefault();
       const touchEvent = createTouchEventFromMouse("touchend", e);
       this.handleTouchEnd(touchEvent);
