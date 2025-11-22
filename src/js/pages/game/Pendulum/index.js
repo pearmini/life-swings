@@ -26,7 +26,7 @@ class Pendulum extends Sprite {
     this.aAcceleration = 0;
     this.rotateAxis = new THREE.Vector3(-1, 0, 1).normalize();
     this.instance.rotateOnAxis(this.rotateAxis, this.angle);
-    this.gravity = 0.005;
+    this.gravity = 0.0025; // Reduced from 0.005 to slow down swing
     this.needsUpdateGravity = false;
     this.isRendered = false;
     this.location.set(0, locationY, 0);
@@ -77,8 +77,8 @@ class Pendulum extends Sprite {
   update() {
     const threshold = 0.1;
     if (this.needsUpdateGravity && this.aVelocity < threshold) {
-      const max = 0.009;
-      const min = 0.004;
+      const max = 0.0045; // Reduced from 0.009 to slow down swing
+      const min = 0.002; // Reduced from 0.004 to slow down swing
       this.gravity = min + Math.random() * (max - min);
       this.needsUpdateGravity = false;
     }
