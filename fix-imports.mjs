@@ -63,6 +63,6 @@ function processDirectory(dir) {
 
 // Process js directory
 console.log('Fixing imports...');
-const count = processDirectory(join(__dirname, 'js'));
+const count = processDirectory(join(__dirname, 'src/js'));
 console.log(`Done! Fixed ${count} files.`);
 

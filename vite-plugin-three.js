@@ -3,8 +3,8 @@ export default function threeGlobalPlugin() {
   return {
     name: 'three-global',
     transform(code, id) {
-      // Only process JS files in the js directory
-      if (!id.includes('/js/') || !id.endsWith('.js')) {
+      // Only process JS files in the js directory (handle both src/js/ and /js/ paths)
+      if ((!id.includes('src/js/') && !id.includes('/js/')) || !id.endsWith('.js')) {
         return code;
       }
       
