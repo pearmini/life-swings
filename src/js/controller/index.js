@@ -240,7 +240,27 @@ class GameController {
       // Ignore autoplay errors
     }
 
-    // 设置事件监听
+    // Helper function to create touch-like event from mouse event
+    const createTouchEventFromMouse = (type, e) => {
+      const rect = canvas.getBoundingClientRect();
+      const touch = {
+        clientX: e.clientX,
+        clientY: e.clientY,
+        pageX: e.clientX - rect.left + window.scrollX,
+        pageY: e.clientY - rect.top + window.scrollY,
+        identifier: 0
+      };
+      return {
+        touches: [touch],
+        changedTouches: [touch],
+        targetTouches: [touch],
+        timeStamp: e.timeStamp || Date.now(),
+        preventDefault: () => e.preventDefault(),
+        stopPropagation: () => e.stopPropagation()
+      };
+    };
+
+    // 设置事件监听 - Touch events
     canvas.addEventListener("touchstart", (e) => {
       // Convert web touch event to expected format
       const touchEvent = {
@@ -328,6 +348,33 @@ class GameController {
         stopPropagation: () => e.stopPropagation()
       };
       this.handleTouchMove(touchEvent);
+    });
+
+    // Add mouse event listeners for desktop support
+    canvas.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      const touchEvent = createTouchEventFromMouse("touchstart", e);
+      this.handleTouchStart(touchEvent);
+    });
+
+    canvas.addEventListener("mouseup", (e) => {
+      e.preventDefault();
+      const touchEvent = createTouchEventFromMouse("touchend", e);
+      this.handleTouchEnd(touchEvent);
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+      // Only handle mousemove if mouse is down
+      if (e.buttons === 1) {
+        e.preventDefault();
+        const touchEvent = createTouchEventFromMouse("touchmove", e);
+        this.handleTouchMove(touchEvent);
+      }
+    });
+
+    // Prevent context menu on right click
+    canvas.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
     });
   }
 

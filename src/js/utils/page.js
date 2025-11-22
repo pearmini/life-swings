@@ -5,8 +5,22 @@ class Page {
   }
 
   getMousePosition(e) {
-    const touch = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : 
-                  e.touches && e.touches[0] ? e.touches[0] : null;
+    // Handle both touch and mouse events
+    let touch = null;
+    if (e.changedTouches && e.changedTouches[0]) {
+      touch = e.changedTouches[0];
+    } else if (e.touches && e.touches[0]) {
+      touch = e.touches[0];
+    } else if (e.clientX !== undefined) {
+      // Mouse event - create touch-like object
+      touch = {
+        clientX: e.clientX,
+        clientY: e.clientY,
+        pageX: e.pageX !== undefined ? e.pageX : e.clientX,
+        pageY: e.pageY !== undefined ? e.pageY : e.clientY
+      };
+    }
+    
     if (!touch) return { x: 0, y: 0 };
     
     // Get canvas bounding rect for accurate positioning
