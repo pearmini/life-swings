@@ -1,22 +1,12 @@
-# Life-swings
+# Swings of Life
 
-- [Life-swings](#life-swings)
-  - [Overview](#overview)
-  - [Why is it](#why-is-it)
-  - [How to play](#how-to-play)
-    - [Pass mode](#pass-mode)
-    - [Classic mode](#classic-mode)
-  - [Future works](#future-works)
+Swings of Life is a 3D WeChat game that combines [Tower Builder](https://play.google.com/store/apps/details?id=com.tefoli.phonglinhstudio.towerbuilder&hl=en_US) and [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), powered by [Three.js](https://threejs.org/).
 
-## Overview
+_Tower Builder_ is a game in which the player operates a hoist that continuously performs a single pendulum movement, and releases the suspended floors at the right moment. The fallen floors are stacked one after another. The higher the pile, the higher the score.
 
-Life-swings is a 3D WeChat game that combines "Building a House" and "Game of Life".
+_Conway's Game of Life_ is a kind of cellular motivation. Players place some cells in a dead or dead state on a two-dimensional plane. The state of each cell at the next moment is determined by the state of nearby cells in accordance with certain rules. The charm of the life game is that the simple initial state and rules can be evolved to produce complex and wonderful graphics, **life is born on the edge of chaos.**
 
-*Building a House* is a game in which the player operates a hoist that continuously performs a single pendulum movement, and releases the suspended floors at the right moment. The fallen floors are stacked one after another. The higher the pile, the higher the score.
-
-*Game of Life* is a kind of cellular motivation. Players place some cells in a dead or dead state on a two-dimensional plane. The state of each cell at the next moment is determined by the state of nearby cells in accordance with certain rules. The charm of the life game is that the simple initial state and rules can be evolved to produce complex and wonderful graphics, **life is born on the edge of chaos.**
-
- <img src="./img/cover.jpg" height="400px">&emsp;<img src="./img/pass_mode.png" height="400px">&emsp;<img src="./img/classic_mode.png" height="400px">
+<img src="./img/cover.jpg" height="400px">&emsp;<img src="./img/pass_mode.png" height="400px">&emsp;<img src="./img/classic_mode.png" height="400px">
 
 ## Why is it
 
@@ -53,9 +43,3 @@ When all cells have energy, they can begin to evolve. Players can observe how th
 After the player has learned the mystery of the proliferation of life games through the pass-through mode, they can go to the classic mode to easily modify the cell state by clicking on the checkerboard and experience the fun of creating life from start to end.
 
  <img src="./img/classic_mode.gif" width="200px">
-
-## Future works
-
-- The WeChat version of Life Swings is still in experience version, it will publish official version soon.
-- Refactor the code and add more features.
-- Write a H5 version of Life Swings.
