@@ -10,7 +10,7 @@ _Conway's Game of Life_ is a kind of cellular motivation. Players place some cel
 
 <img src="./img/cover.jpg" height="400px">&emsp;<img src="./img/pass_mode.png" height="400px">&emsp;<img src="./img/classic_mode.png" height="400px">
 
-## Why is it
+## Inspiration
 
 On the one hand, this game is to cherish the memory of the British mathematician [John Horton Conway](https://nl.wikipedia.org/wiki/John_Horton), who died due to the epidemic. We hopes that after the epidemic, everything grows.
 
@@ -20,7 +20,7 @@ On the other hand, we hope that users will experience the swinging creation of l
 
 **Life is growing up amidst stumbling, and prosper in swing.**
 
-## How to play
+## Get Started
 
 The game contains two modes: pass mode and classic mode.
 
@@ -28,7 +28,7 @@ The pass mode is designed to help the player complete the initial life state's l
 
 Both of these modes can automatically evolve according to the initial state, allowing players to experience the fun of creating life.
 
-### Pass mode
+### Pass Mode
 
 There are a total of 20 levels in the pass mode.
 
@@ -40,7 +40,7 @@ When all cells have energy, they can begin to evolve. Players can observe how th
 
  <img src="./img/pass_mode.gif" width="200px">
 
-### Classic mode
+### Classic Mode
 
 After the player has learned the mystery of the proliferation of life games through the pass-through mode, they can go to the classic mode to easily modify the cell state by clicking on the checkerboard and experience the fun of creating life from start to end.
 
